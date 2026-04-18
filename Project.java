@@ -1,0 +1,214 @@
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Project {
+
+    public static void main(String[] args) {
+
+        HashMap<String, ArrayList<String>> probeDatabase = new HashMap<>(); //Maps probe types for ultrasound to an array of their use cases
+        probeDatabase.put("Linear", new ArrayList<>(Arrays.asList("Vascular", "Breast")));
+        probeDatabase.put("Convex", new ArrayList<>(Arrays.asList("Deeper Organ Imaging", "Breast")));
+        probeDatabase.put("Pencil", new ArrayList<>(Arrays.asList("Measure Blood Flow", "Measure Blood Sound Speed")));
+
+        System.out.println("\n~Radiology Management Software~");
+        System.out.println("---------------------------------");
+        System.out.println("\n Menu\n");
+        System.out.println("1. ");
+
+    }
+
+}
+
+class DiagnosticTool {
+
+    //2 attributes
+    protected String name;
+    protected boolean isOperational;
+
+    //constructor
+    public DiagnosticTool(String name, boolean isOperational) {
+        this.name = name;
+        this.isOperational = isOperational;
+    }
+
+    //accessor methods
+    public String getName() {
+        return this.name;
+
+    }
+
+    public boolean getIsOperational() {
+        return this.isOperational;
+    }
+
+    //mutator methods
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOperationalStatus(boolean isOperational) {
+        this.isOperational = isOperational;
+    }
+
+    public void operationalStatusToggle() {
+        this.isOperational = !this.isOperational;
+    }
+
+    //2 methods to be overriden (at least 1 must be non void)
+    public void activate() {
+        System.out.println("Starting ...");
+    }
+
+    public String getSafetyProtocol() {
+        return "Only authorised persons may use this tool ";
+    }
+}
+
+class MRIMachine extends DiagnosticTool {
+
+    //1 attribute
+    private HashMap<String, String> systemSettings;
+
+    //constructor
+    public MRIMachine(String name, boolean isOperational) {
+        super(name, isOperational);
+        this.systemSettings = new HashMap<>();
+
+    }
+
+    //accessor methods
+    public HashMap<String, String> getSystemSettings() {
+        return this.systemSettings;
+
+    }
+
+    //mutator methods
+    public void setSystemSettings(String key, String value) {
+        
+
+    }
+
+    //overrides of 2 methods
+    //at least 1 shuold modify value of a class attribute
+    //both should reference an attribute or method of parent class
+    @Override
+    public void activate() {
+        super.activate();
+        System.out.println("Starting MRI Machine: " + this.name);
+        System.out.println(this.systemSettings);
+    }
+
+    //toString 
+}
+
+class Ultrasound extends DiagnosticTool {
+
+    private String currentProbeType; //type of probe used (narrow, round, etc)
+
+    public Ultrasound(String name, boolean isOperational) {
+        super(name, isOperational);
+        this.currentProbeType = ""; //initialise currentProbeType to blank by default
+
+    }
+
+    //accessor methods
+    public String getCurrentProbeType() {
+        return this.currentProbeType;
+    }
+
+    //mutator methods
+    public void setCurrentProbeType(String probeType) {
+        this.currentProbeType = probeType;
+    }
+
+    //overrides of 2 methods
+    //at least 1 shuold modify value of a class attribute
+    //both should reference an attribute or method of parent class
+    @Override
+    public void activate() {
+        if (!this.getIsOperational()) {
+            System.out.println("Ultrasound " + this.getName() + " is not operational. Activation failed.");
+            return;
+        }
+
+        if (this.currentProbeType.equals("")) {
+            this.currentProbeType = "Linear"; //if no probeType, set a default probetype
+        }
+
+        super.activate();
+        System.out.println("Emitting sound waves");
+        System.out.println("Current Probe Equipped: " + this.getCurrentProbeType());
+    }
+
+    @Override
+    public String getSafetyProtocol() {
+        return "be safe"; //incomplete
+
+    }
+
+    //toString 
+    @Override
+    public String toString() {
+        return "Ultrasound name: " + this.getName() + "', operational=" + this.getIsOperational() + ", currentProbeType='" + this.currentProbeType;
+    }
+}
+
+class Radiologist {
+
+    private String fullName;
+    private HashMap<String, Integer> toolExperience;
+
+    public Radiologist(String fullName) {
+        this.fullName = fullName;
+        this.toolExperience = new HashMap<>(); //Maps tools to how many times they've been used
+
+        toolExperience.put("MRIMachine", 0);
+        toolExperience.put("Ultrasound", 0);
+    }
+
+    //accessor methods
+    public String getFullName() {
+        return this.fullName;
+    }
+
+    //mutator methods
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    //2 methods
+    public void logScan(String tool) {
+        if (!this.toolExperience.containsKey(tool)) { //if the tool is not in the experience log, create the key and set value to 1
+            this.toolExperience.put(tool, 1);
+
+        } else {
+            int currentExperience = this.toolExperience.get(tool); //gets current experience count for the tool
+            this.toolExperience.put(tool, currentExperience + 1); //increments it by 1
+        }
+
+    }
+
+    public void printExperienceReport() {
+
+        System.out.println("-Experience Report-");
+        System.out.println("");
+        System.out.println(this); //uses toString method
+        System.out.println("");
+        for (Map.Entry<String, Integer> entry : this.toolExperience.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+            System.out.println(key + ": " + value);
+
+        }
+        System.out.println("-------------");
+
+    }
+
+    public String toString() {
+        return "Radiologist Name: " + this.fullName;
+    }
+
+}
