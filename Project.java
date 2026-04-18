@@ -18,6 +18,13 @@ public class Project {
         System.out.println("\n Menu\n");
         System.out.println("1. ");
 
+
+        MRIMachine mri1 = new MRIMachine("MriMachine1", true);
+        System.out.println(mri1);
+        mri1.setSystemSetting("test", "42");
+        System.out.println(mri1);
+        mri1.setSystemSetting("test", "43");
+
     }
 
 }
@@ -77,6 +84,10 @@ class MRIMachine extends DiagnosticTool {
         super(name, isOperational);
         this.systemSettings = new HashMap<>();
 
+        //initialise default settings
+        this.systemSettings.put("MagneticFieldStrength", "1.5T");
+        this.systemSettings.put("CoilType", "Head");
+
     }
 
     //accessor methods
@@ -86,8 +97,22 @@ class MRIMachine extends DiagnosticTool {
     }
 
     //mutator methods
-    public void setSystemSettings(String key, String value) {
-        
+    public void setSystemSetting(String key, String value) {
+        if (this.systemSettings.containsKey(key)) {
+            String oldValue = this.systemSettings.get(key);
+            this.systemSettings.put(key, value);
+            System.out.println("Updated MRI setting: " + key + " from:  " + oldValue + " to -> " + value);
+        } else {
+            this.systemSettings.put(key, value);
+            System.out.println("Added new MRI setting: " + key + ", Set to: " + value);
+
+        }
+
+    }
+
+    public void removeSystemSetting(String key) {
+        this.systemSettings.remove(key);
+        System.out.println("Removed MRI setting: " + key);
 
     }
 
@@ -95,13 +120,30 @@ class MRIMachine extends DiagnosticTool {
     //at least 1 shuold modify value of a class attribute
     //both should reference an attribute or method of parent class
     @Override
-    public void activate() {
+    public void activate() { //Plan: loop through systemSettings to see if any values are blank. If yes, set default values and then ask the user to reactivate
+        if (!this.getIsOperational()) {
+            System.out.println("MRI Machine " + this.getName() + " is not operational. Activation failed.");
+        }else if(this.systemSettings.size() == 0){
+            this.systemSettings.put("MagneticFieldStrength", "1.5T");
+            this.systemSettings.put("CoilType", "Head");
+        }
+
         super.activate();
         System.out.println("Starting MRI Machine: " + this.name);
-        System.out.println(this.systemSettings);
+        System.out.println("Emitting Magnetic Fields...");
+    }
+
+    @Override
+    public String getSafetyProtocol() {
+        String defaultMessage = super.getSafetyProtocol();
+        return defaultMessage + "\n All personal belongings and metallic objects must be removed ";
+
     }
 
     //toString 
+    public String toString() {
+        return "MRI Machine name: " + this.name + "\n" + this.systemSettings;
+    }
 }
 
 class Ultrasound extends DiagnosticTool {

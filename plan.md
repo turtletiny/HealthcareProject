@@ -1,8 +1,3 @@
-- HashMap probetype (string) to arraylist of use cases (ArrayList<String>) 
-- brands as arraylist
-
-
-this.probeTypeMap = new HashMap<>();
 
 
 
@@ -18,3 +13,9 @@ Functions:
 - Change probe type
 - probe use cases  
 - 
+
+
+
+
+Plan: loop through systemSettings to see if any values are blank. If yes, set default values and then ask the user to reactivate
+also, have battery setting for mri machine, and if power is too low prevent activation
