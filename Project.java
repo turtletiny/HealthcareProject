@@ -18,7 +18,6 @@ public class Project {
         System.out.println("\n Menu\n");
         System.out.println("1. ");
 
-
         MRIMachine mri1 = new MRIMachine("MriMachine1", true);
         System.out.println(mri1);
         mri1.setSystemSetting("test", "42");
@@ -84,9 +83,9 @@ class MRIMachine extends DiagnosticTool {
         super(name, isOperational);
         this.systemSettings = new HashMap<>();
 
-        //initialise default settings
-        this.systemSettings.put("MagneticFieldStrength", "1.5T");
-        this.systemSettings.put("CoilType", "Head");
+        //initialise default settings with no values yet
+        this.systemSettings.put("MagneticFieldStrength", "");
+        this.systemSettings.put("CoilType", "");
 
     }
 
@@ -122,15 +121,29 @@ class MRIMachine extends DiagnosticTool {
     @Override
     public void activate() { //Plan: loop through systemSettings to see if any values are blank. If yes, set default values and then ask the user to reactivate
         if (!this.getIsOperational()) {
-            System.out.println("MRI Machine " + this.getName() + " is not operational. Activation failed.");
-        }else if(this.systemSettings.size() == 0){
-            this.systemSettings.put("MagneticFieldStrength", "1.5T");
-            this.systemSettings.put("CoilType", "Head");
+            System.out.println("MRI Machine " + this.name + " is not operational. Activation failed. ");
+            System.out.println("Please reactivate once MRI Machine " + this.name + " is operational");
+            return;
+
         }
 
+        for (Map.Entry<String, String> entry : this.systemSettings.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (value.equals("")) {
+                System.out.println("Value not selected for parameter: " + key + ". Activation failed. ");
+                System.out.println("Initialising default settings values for " + this.name);
+                System.out.println("Please reactivate once MRI Machine " + this.name + " has all settings initialised");
+
+                return;
+            }
+
+        }
+        //No issues: activate MRI Machine
         super.activate();
         System.out.println("Starting MRI Machine: " + this.name);
         System.out.println("Emitting Magnetic Fields...");
+
     }
 
     @Override
