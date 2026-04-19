@@ -191,6 +191,8 @@ class Ultrasound extends DiagnosticTool {
 
         if (this.currentProbeType.equals("")) {
             this.currentProbeType = "Linear"; //if no probeType, set a default probetype
+            System.out.println("No probe selected. Initialising default probe  ");
+            return;
         }
 
         super.activate();
