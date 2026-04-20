@@ -7,26 +7,65 @@ import java.util.Map;
 public class Project {
 
     public static void main(String[] args) {
+        
 
-        HashMap<String, ArrayList<String>> probeDatabase = new HashMap<>(); //Maps probe types for ultrasound to an array of their use cases
+        //
+        ArrayList<Radiologist> radiologists = new ArrayList<>();
+        Radiologist drYagami = new Radiologist("Light Yagami");
+        radiologists.add(drYagami);
+
+        ArrayList<Ultrasound> ultrasounds = new ArrayList<>();
+        Ultrasound ultrasound1 = new Ultrasound("Ultrasound-1", true);
+        ultrasounds.add(ultrasound1);
+
+        ArrayList<MRIMachine> mris = new ArrayList<>();
+        MRIMachine mri1 = new MRIMachine("MRI-1", true);
+        mris.add(mri1);
+
+
+        //Maps probe types for ultrasound to an array of their use cases
+        HashMap<String, ArrayList<String>> probeDatabase = new HashMap<>();
         probeDatabase.put("Linear", new ArrayList<>(Arrays.asList("Vascular", "Breast")));
         probeDatabase.put("Convex", new ArrayList<>(Arrays.asList("Deeper Organ Imaging", "Breast")));
         probeDatabase.put("Pencil", new ArrayList<>(Arrays.asList("Measure Blood Flow", "Measure Blood Sound Speed")));
 
-        System.out.println("\n~Radiology Management Software~");
-        System.out.println("---------------------------------");
-        System.out.println("\n Menu\n");
-        System.out.println("1. ");
+        int menuChoice;
+        Boolean running = true;
+        while (running) {
+            System.out.println("\n~Radiology Management Software~");
+            System.out.println("-------------------------------");
+            System.out.println("\n Menu\n");
+            System.out.println("1. Configure MRI Machines ");
+            System.out.println("2. Configure Ultrasounds ");
+            System.out.println("3. Manage Radiologists ");
+            System.out.println("4. Use Diagnostic Tool ");
+            System.out.println("5. User Manuals ");
 
-        MRIMachine mri1 = new MRIMachine("MriMachine1", true);
-        System.out.println(mri1);
-        mri1.setSystemSetting("test", "42");
-        System.out.println(mri1);
-        mri1.setSystemSetting("test", "43");
+            System.out.println(". Exit [5, x, exit] ");
+            menuChoice = In.nextInt();
+
+            if (menuChoice == 1) {
+                System.out.println("~MRI Machine Configuration~");
+                System.out.println("---------------------------");
+                System.out.println("Available MRI Machines: ");
+
+                //loop through an array list of mri machines and print them with index as a count for input
+            }
+
+        }else{
+                    System.out.println("Choose options 1-5 !");
+
+                }
 
     }
 
 }
+
+
+
+}
+
+
 
 class DiagnosticTool {
 
@@ -189,12 +228,14 @@ class Ultrasound extends DiagnosticTool {
             return;
         }
 
+        //if probeType is empty, set to 'not operational'
         if (this.currentProbeType.equals("")) {
-            this.currentProbeType = "Linear"; //if no probeType, set a default probetype
-            System.out.println("No probe selected. Initialising default probe  ");
+            System.out.println("No probe selected. System safety protocol activated. ");
+            this.setOperationalStatus(false);
             return;
         }
 
+        //No issues: activate Ultrasound
         super.activate();
         System.out.println("Emitting sound waves");
         System.out.println("Current Probe Equipped: " + this.getCurrentProbeType());
@@ -202,7 +243,8 @@ class Ultrasound extends DiagnosticTool {
 
     @Override
     public String getSafetyProtocol() {
-        return "be safe"; //incomplete
+        String defaultMessage = super.getSafetyProtocol();
+        return defaultMessage + "Thermal index must be monitored during use. ";
 
     }
 
@@ -231,9 +273,17 @@ class Radiologist {
         return this.fullName;
     }
 
+    public HashMap<String, Integer> getToolExperience() {
+        return this.toolExperience;
+    }
+
     //mutator methods
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public void setToolExperience(String tool, Integer experience) {
+        this.toolExperience.put(tool, experience);
     }
 
     //2 methods
