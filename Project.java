@@ -24,7 +24,6 @@ public class Project {
         mris.add(mri1);
         mris.add(mri2);
 
-
         //Maps probe types for ultrasound to an array of their use cases
         HashMap<String, ArrayList<String>> probeDatabase = new HashMap<>();
         probeDatabase.put("Linear", new ArrayList<>(Arrays.asList("Vascular", "Breast")));
@@ -36,69 +35,85 @@ public class Project {
             System.out.println("\n~Radiology Management Software~");
             System.out.println("-------------------------------");
             System.out.println("\n Menu\n");
-            System.out.println("1. Configure MRI Machines ");
-            System.out.println("2. Configure Ultrasounds ");
-            System.out.println("3. Manage Radiologists ");
-            System.out.println("4. Use Diagnostic Tool ");
-            System.out.println("5. User Manuals ");
+            System.out.println("[1] Configure MRI Machines ");
+            System.out.println("[2] Configure Ultrasounds ");
+            System.out.println("[3] Manage Radiologists ");
+            System.out.println("[4] Use Diagnostic Tool ");
+            System.out.println("[5] User Manuals ");
 
-            System.out.println("6. Exit ");
+            System.out.println("[6] Exit ");
             int menuChoice = In.nextInt();
-
             if (menuChoice == 1) {
                 while (true) {
                     System.out.println("~MRI Machine Configuration~");
                     System.out.println("---------------------------");
                     System.out.println("Select MRI Machine to configure: ");
                     for (int i = 0; i < mris.size(); i++) {
-                        System.out.println((i + 1) + ". " + mris.get(i).getName());
+                        System.out.println("[" + (i + 1) + "] " + mris.get(i).getName());
                     }
-                    menuChoice = In.nextInt();
-                    if (menuChoice > mris.size() || menuChoice < 1) {
+                    System.out.println("[" + (mris.size() + 1) + "] Back");
+                    int selection = In.nextInt();
+                    if (selection < 1 || selection > mris.size() + 1) {
                         System.out.println("Enter a valid MRI Machine! ");
-                    } else {
-                        MRIMachine selectedMRI = mris.get(menuChoice - 1);
+                        continue;
+                    }
+                    if (selection == mris.size() + 1) {
+                        break; 
+                    }
+
+                    MRIMachine selectedMRI = mris.get(selection - 1);
+
+                    while (true) {
                         System.out.println(selectedMRI);
-                        System.out.println((selectedMRI.getSystemSettings().size() + 1) + ". Exit");
+                        System.out.println("[1] Toggle Operational");
+                        System.out.println("[2] Set Coil Type");
+                        System.out.println("[3] Set Magnetic Field Strength");
+                        System.out.println("[4] Back");
                         System.out.println("Select setting to edit: ");
-                        menuChoice = In.nextChar();
-                        if (menuChoice == '2') {
-                            System.out.println("Enter value (max 8): ");
-                            double magneticFieldStrength = In.nextDouble();
-                            if (magneticFieldStrength > 8 || magneticFieldStrength < 0){
-                                System.out.println("Must be between 0 and 8.0");
+                        int settingChoice = In.nextInt();
 
-                            }else{
-                                selectedMRI.setSystemSetting("MagneticFieldStrength", magneticFieldStrength + "T");
-                            }
+                        if (settingChoice == 1) {
+                            selectedMRI.isOperationalToggle();
+                            System.out.println("Updated MRI Operational state from: " + !selectedMRI.getIsOperational() + " to -> " + selectedMRI.getIsOperational());
 
-                        } else if (menuChoice == '1') {
+                        } else if (settingChoice == 2) {
                             System.out.println("Available Coils: ");
-                            System.out.println("1. Head");
-                            System.out.println("2. Body");
-                            System.out.println("3. Extremity");
+                            System.out.println("[1] Head");
+                            System.out.println("[2] Body");
+                            System.out.println("[3] Extremity");
                             System.out.println("");
                             System.out.println("Enter coil type:");
 
-                            menuChoice = In.nextInt();
-                            if (menuChoice == 1) {
+                            int coilChoice = In.nextInt();
+                            if (coilChoice == 1) {
                                 selectedMRI.setSystemSetting("CoilType", "Head");
 
-                            } else if (menuChoice == 2) {
+                            } else if (coilChoice == 2) {
                                 selectedMRI.setSystemSetting("CoilType", "Body");
 
-                            } else if (menuChoice == 3) {
+                            } else if (coilChoice == 3) {
                                 selectedMRI.setSystemSetting("CoilType", "Extremity");
 
+                            } else {
+                                System.out.println("Please enter a valid option. ");
                             }
 
-                        }
+                        } else if (settingChoice == 3) {
+                            System.out.println("Enter value (max 8): ");
+                            double magneticFieldStrength = In.nextDouble();
+                            if (magneticFieldStrength > 8 || magneticFieldStrength < 0) {
+                                System.out.println("Must be between 0 and 8.0");
 
-                        if (menuChoice == mris.size() + 1) {
-                            //if "exit" then... exit?
+                            } else {
+                                selectedMRI.setSystemSetting("MagneticFieldStrength", magneticFieldStrength + "T");
+                            }
+
+                        } else if (settingChoice == 4) {
+                            break; 
+                        } else {
+                            System.out.println("Enter a valid option.");
                         }
                     }
-
                 }
 
             } else {
@@ -139,11 +154,11 @@ class DiagnosticTool {
         this.name = name;
     }
 
-    public void setOperationalStatus(boolean isOperational) {
+    public void setIsOperational(boolean isOperational) {
         this.isOperational = isOperational;
     }
 
-    public void operationalStatusToggle() {
+    public void isOperationalToggle() {
         this.isOperational = !this.isOperational;
     }
 
@@ -241,24 +256,9 @@ class MRIMachine extends DiagnosticTool {
     @Override
     public String toString() {
         String report = "-MRI Machine: " + this.getName() + "-\n";
-        report += "Is Operational? " + this.getIsOperational() + "\n";
-        report += "System Settings: \n";
-
-        if (this.systemSettings.size() == 0) {
-            report += "No settings configured \n";
-        } else {
-            int settingNumber = 1;
-            for (Map.Entry<String, String> entry : this.systemSettings.entrySet()) {
-
-                String key = entry.getKey();
-                String value = entry.getValue();
-                report += settingNumber + ". " + key + ": " + value + "\n";
-
-                settingNumber++;
-
-            }
-        }
-
+        report += "Is Operational: " + this.getIsOperational() + "\n";
+        report += "CoilType: " + this.systemSettings.get("CoilType") + "\n";
+        report += "MagneticFieldStrength: " + this.systemSettings.get("MagneticFieldStrength") + "\n";
         return report;
     }
 }
@@ -296,7 +296,7 @@ class Ultrasound extends DiagnosticTool {
         //if probeType is empty, set to 'not operational'
         if (this.currentProbeType.equals("")) {
             System.out.println("No probe selected. System safety protocol activated. ");
-            this.setOperationalStatus(false);
+            this.setIsOperational(false);
             return;
         }
 
