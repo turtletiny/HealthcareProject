@@ -7,7 +7,6 @@ import java.util.Map;
 public class Project {
 
     public static void main(String[] args) {
-        
 
         //
         ArrayList<Radiologist> radiologists = new ArrayList<>();
@@ -20,7 +19,10 @@ public class Project {
 
         ArrayList<MRIMachine> mris = new ArrayList<>();
         MRIMachine mri1 = new MRIMachine("MRI-1", true);
+        MRIMachine mri2 = new MRIMachine("MRI-2", true);
+
         mris.add(mri1);
+        mris.add(mri2);
 
 
         //Maps probe types for ultrasound to an array of their use cases
@@ -29,7 +31,6 @@ public class Project {
         probeDatabase.put("Convex", new ArrayList<>(Arrays.asList("Deeper Organ Imaging", "Breast")));
         probeDatabase.put("Pencil", new ArrayList<>(Arrays.asList("Measure Blood Flow", "Measure Blood Sound Speed")));
 
-        int menuChoice;
         Boolean running = true;
         while (running) {
             System.out.println("\n~Radiology Management Software~");
@@ -41,31 +42,75 @@ public class Project {
             System.out.println("4. Use Diagnostic Tool ");
             System.out.println("5. User Manuals ");
 
-            System.out.println(". Exit [5, x, exit] ");
-            menuChoice = In.nextInt();
+            System.out.println("6. Exit ");
+            int menuChoice = In.nextInt();
 
             if (menuChoice == 1) {
-                System.out.println("~MRI Machine Configuration~");
-                System.out.println("---------------------------");
-                System.out.println("Available MRI Machines: ");
+                while (true) {
+                    System.out.println("~MRI Machine Configuration~");
+                    System.out.println("---------------------------");
+                    System.out.println("Select MRI Machine to configure: ");
+                    for (int i = 0; i < mris.size(); i++) {
+                        System.out.println((i + 1) + ". " + mris.get(i).getName());
+                    }
+                    menuChoice = In.nextInt();
+                    if (menuChoice > mris.size() || menuChoice < 1) {
+                        System.out.println("Enter a valid MRI Machine! ");
+                    } else {
+                        MRIMachine selectedMRI = mris.get(menuChoice - 1);
+                        System.out.println(selectedMRI);
+                        System.out.println((selectedMRI.getSystemSettings().size() + 1) + ". Exit");
+                        System.out.println("Select setting to edit: ");
+                        menuChoice = In.nextChar();
+                        if (menuChoice == '2') {
+                            System.out.println("Enter value (max 8): ");
+                            double magneticFieldStrength = In.nextDouble();
+                            if (magneticFieldStrength > 8 || magneticFieldStrength < 0){
+                                System.out.println("Must be between 0 and 8.0");
 
-                //loop through an array list of mri machines and print them with index as a count for input
-            }
+                            }else{
+                                selectedMRI.setSystemSetting("MagneticFieldStrength", magneticFieldStrength + "T");
+                            }
 
-        }else{
-                    System.out.println("Choose options 1-5 !");
+                        } else if (menuChoice == '1') {
+                            System.out.println("Available Coils: ");
+                            System.out.println("1. Head");
+                            System.out.println("2. Body");
+                            System.out.println("3. Extremity");
+                            System.out.println("");
+                            System.out.println("Enter coil type:");
+
+                            menuChoice = In.nextInt();
+                            if (menuChoice == 1) {
+                                selectedMRI.setSystemSetting("CoilType", "Head");
+
+                            } else if (menuChoice == 2) {
+                                selectedMRI.setSystemSetting("CoilType", "Body");
+
+                            } else if (menuChoice == 3) {
+                                selectedMRI.setSystemSetting("CoilType", "Extremity");
+
+                            }
+
+                        }
+
+                        if (menuChoice == mris.size() + 1) {
+                            //if "exit" then... exit?
+                        }
+                    }
 
                 }
+
+            } else {
+                System.out.println("Choose options 1-5 !");
+
+            }
+
+        }
 
     }
 
 }
-
-
-
-}
-
-
 
 class DiagnosticTool {
 
@@ -193,8 +238,28 @@ class MRIMachine extends DiagnosticTool {
     }
 
     //toString 
+    @Override
     public String toString() {
-        return "MRI Machine name: " + this.name + "\n" + this.systemSettings;
+        String report = "-MRI Machine: " + this.getName() + "-\n";
+        report += "Is Operational? " + this.getIsOperational() + "\n";
+        report += "System Settings: \n";
+
+        if (this.systemSettings.size() == 0) {
+            report += "No settings configured \n";
+        } else {
+            int settingNumber = 1;
+            for (Map.Entry<String, String> entry : this.systemSettings.entrySet()) {
+
+                String key = entry.getKey();
+                String value = entry.getValue();
+                report += settingNumber + ". " + key + ": " + value + "\n";
+
+                settingNumber++;
+
+            }
+        }
+
+        return report;
     }
 }
 
