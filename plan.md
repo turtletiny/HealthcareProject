@@ -1,6 +1,6 @@
 
 to - do
-- add setname to mri machine
 - add home button
-- fix ultrasound toString
-- option to add new mris/ultrasound + probetype
+
+- setname duplicate for mri machine
+- complete edit radiologist experience 

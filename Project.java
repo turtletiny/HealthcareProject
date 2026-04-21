@@ -76,18 +76,32 @@ public class Project {
                         break;
                     }
                     if (selection == mris.size() + 1) { //Add new MRI Machine
+                        while (true) {
+                            boolean duplicateName = false; //Flag to check if new MRI name already exists
+                            System.out.println("Enter new MRI Machine name: ");
+                            String newMRI = In.nextLine();
+                            System.out.println("-------------------------------------------------------");
+                            for (MRIMachine mri : mris) {
+                                if (mri.getName().equals(newMRI)) {
+                                    System.out.println("Name already exists!");
+                                    duplicateName = true;
+                                    break;
+                                }
+                            }
+                            if (duplicateName) {
+                                continue;
+                            }
+                            mris.add(new MRIMachine(newMRI, true));
+                            System.out.println("New MRI Machine: " + newMRI + " added. ");
+                            break;
 
-                        System.out.println("Enter new MRI Machine name: ");
-                        String newMRI = In.nextLine();
-                        System.out.println("-------------------------------------------------------");
-                        mris.add(new MRIMachine(newMRI, true));
-                        System.out.println("New MRI Machine: " + newMRI + " added. ");
+                        }
 
                     }
 
-                    MRIMachine selectedMRI = mris.get(selection - 1);
                     //Choose Settings 
                     while (true) {
+                        MRIMachine selectedMRI = mris.get(selection - 1);
                         System.out.println(selectedMRI);
                         System.out.println("Select setting to edit: ");
                         System.out.println("[1] Set Name");
@@ -181,37 +195,37 @@ public class Project {
                     //Add new Ultrasound
                 }
                 if (selection == (ultrasounds.size() + 1)) {
-                    while(true){
-                    boolean duplicateName = false; //Flag to check if new Ultrasound name already exists in ultrasoundDatabase
+                    while (true) {
+                        boolean duplicateName = false; //Flag to check if new Ultrasound name already exists in ultrasoundDatabase
 
-                    
-                    System.out.println("Enter new Ultrasound name: ");
-                    String newUltrasound = In.nextLine();
-                    System.out.println("-------------------------------------------------------");
-                    for (Ultrasound ultrasound : ultrasounds){
-                        if (ultrasound.getName().equals(newUltrasound)){
-                            System.out.println("Name already exists! ");
-                            duplicateName = true;
-                            break;
+                        System.out.println("Enter new Ultrasound name: ");
+                        String newUltrasound = In.nextLine();
+                        System.out.println("-------------------------------------------------------");
+                        for (Ultrasound ultrasound : ultrasounds) {
+                            if (ultrasound.getName().equals(newUltrasound)) {
+                                System.out.println("Name already exists! ");
+                                duplicateName = true;
+                                break;
+
+                            }
 
                         }
-
+                        if (duplicateName) {
+                            continue;
+                        }
+                        ultrasounds.add(new Ultrasound(newUltrasound, true));
+                        System.out.println("New Ultrasound: " + newUltrasound + " added. ");
+                        break;
                     }
-                    if(duplicateName){
-                        continue;
-                    }
-                    ultrasounds.add(new Ultrasound(newUltrasound, true));
-                    System.out.println("New Ultrasound: " + newUltrasound + " added. ");
-                    break;
-                }
 
                 }
                 //Back button
                 if (selection == ultrasounds.size() + 2) {
                     break;
                 }
-                Ultrasound selectedUltrasound = ultrasounds.get(selection - 1);
+
                 while (true) {
+                    Ultrasound selectedUltrasound = ultrasounds.get(selection - 1);
                     System.out.println(selectedUltrasound);
                     System.out.println("Select setting to edit: ");
                     System.out.println("[1] Set Name");
@@ -280,6 +294,106 @@ public class Project {
                 }
                 //[3] Manage Radiologists
             } else if (menuChoice == 3) {
+                while (true) {
+                    System.out.println("~Radiologist Configuration~");
+                    System.out.println("Select Radiologist to configure: ");
+                    for (int i = 0; i < radiologists.size(); i++) {
+                        System.out.println("[" + (i + 1) + "] " + radiologists.get(i).getFullName());
+                    }
+                    System.out.println("[" + (radiologists.size() + 1) + "] Add new Radiologist");
+                    System.out.println("[" + (radiologists.size() + 2) + "] Back");
+                    System.out.println("-------------------------------------------------------");
+                    int selection = In.nextInt();
+                    System.out.println("-------------------------------------------------------");
+                    if (selection < 1 || selection > radiologists.size() + 2) {
+                        System.out.println("Invalid option! ");
+                        continue; //restarts while loop
+                    }
+                    if (selection == radiologists.size() + 2) { //Back Button
+                        break;
+                    }
+                    if (selection == radiologists.size() + 1) { //Add new Radiologist
+                        while (true) {
+                            boolean duplicateName = false; //Flag to check if new Radiologist name already exists
+                            System.out.println("Enter new Radiologist Full Name: ");
+                            String newRadiologistName = In.nextLine();
+                            System.out.println("-------------------------------------------------------");
+                            for (Radiologist radiologist : radiologists) {
+                                if (radiologist.getFullName().equals(newRadiologistName)) {
+                                    System.out.println("Name already exists!");
+                                    duplicateName = true;
+                                    break;
+                                }
+                            }
+                            if (duplicateName) {
+                                continue;
+                            }
+                            radiologists.add(new Radiologist(newRadiologistName));
+                            System.out.println("New Radiologist: " + newRadiologistName + " added. ");
+                            break;
+
+                        }
+
+                    }
+                    while (true) {
+                        Radiologist selectedRadiologist = radiologists.get(selection - 1);
+                        System.out.println("[1] Set Name");
+                        System.out.println("[2] Print Experience Report");
+                        System.out.println("[3] Edit Experience ");
+                        System.out.println("[4] Back");
+                        System.out.println("-------------------------------------------------------");
+                        int radiologistFunctionChoice = In.nextInt();
+                        System.out.println("-------------------------------------------------------");
+
+                        if (radiologistFunctionChoice == 1) {
+                            while (true) {
+                                boolean duplicateName = false; //Flag to check if new Radiologist name already exists in ultrasoundDatabase
+
+                                System.out.println("Enter new Radiologist Full Name: ");
+                                String newRadiologistName = In.nextLine();
+                                System.out.println("-------------------------------------------------------");
+                                for (Radiologist radiologist : radiologists) {
+                                    if (radiologist.getFullName().equals(newRadiologistName)) {
+                                        System.out.println("Name already exists! ");
+                                        duplicateName = true;
+                                        break;
+
+                                    }
+
+                                }
+                                if (duplicateName) {
+                                    continue;
+                                }
+                                radiologists.add(new Radiologist(newRadiologistName));
+                                System.out.println("New Radiologist: " + newRadiologistName + " added. ");
+                                break;
+                            }
+                        }
+                        if (radiologistFunctionChoice == 2) {
+                            selectedRadiologist.printExperienceReport();
+                            System.out.println("Press ENTER to go back");
+                            In.nextLine();
+
+                        }
+                        if (radiologistFunctionChoice == 3) {
+                            while (true) {
+                                System.out.println("Select tool experience to edit: ");
+                                System.out.println("[1] MRI Machine");
+                                System.out.println("[2] Ultrasound");
+                                System.out.println("[3] Back");
+                                System.out.println("-------------------------------------------------------");
+                                
+
+
+
+
+                            }
+
+                        }
+
+                    }
+                }
+
                 //[4] Use Diagnostic Tool
             } else if (menuChoice == 4) {
                 //[5] User Manuals
@@ -487,7 +601,10 @@ class Ultrasound extends DiagnosticTool {
     //toString 
     @Override
     public String toString() {
-        return "Ultrasound name: " + this.getName() + "', operational=" + this.getIsOperational() + ", currentProbeType='" + this.currentProbeType;
+        String report = "Ultrasound: " + this.getName() + "\n";
+        report += "Is Operational: " + this.getIsOperational() + "\n";
+        report += "Current Probe Type: " + this.currentProbeType;
+        return report;
     }
 }
 
