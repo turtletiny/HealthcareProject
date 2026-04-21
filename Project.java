@@ -12,7 +12,6 @@ public class Project {
         ArrayList<MRIMachine> mris = new ArrayList<>();
         ArrayList<Ultrasound> ultrasounds = new ArrayList<>();
         ArrayList<Radiologist> radiologists = new ArrayList<>();
-        
 
         //Initialise Objects and add to Databases
         Radiologist drYagami = new Radiologist("Light Yagami");
@@ -449,19 +448,49 @@ public class Project {
 
                 //[4] Use Diagnostic Tool
             } else if (menuChoice == 4) {
-                System.out.println("-------------------------------------------------------");
-                System.out.println("Enter Tool to use: ");
-                int i;
-                for (i = 0; i < mris.size(); i++){
-                    System.out.println("[" + (i+1) + "] " + mris.get(i).getName());
+                while (true) {
+                    System.out.println("Enter Tool to use: ");
+                    System.out.println("[1] MRI Machine");
+                    System.out.println("[2] Ultrasound");
+                    System.out.println("[3] Back");
+                    System.out.println("-------------------------------------------------------");
+                    int useToolChoice = In.nextInt();
+                    System.out.println("-------------------------------------------------------");
+                    if (useToolChoice == 1) {
+                        while (true) {
+                            System.out.println("Select MRI Machine to activate: ");
+                            int i = 1;
+                            for (MRIMachine mri : mris) {
+                                System.out.println("[" + i + "] " + mri.getName());
+                                i++;
+                            }
+                            System.out.println("[" + i + "] Back");
+                            System.out.println("-------------------------------------------------------");
+                            int useMRIChoice = In.nextInt();
+                            System.out.println("-------------------------------------------------------");
+                            if(useMRIChoice > i || useMRIChoice < 1){
+                                System.out.println("Invalid option!");
+                            }else if(useMRIChoice == i){
+                                break;
+                            }else{
+                                MRIMachine selectedMRIToUse = mris.get(useMRIChoice - 1);
+                                // selectedMRIToUse.activate();
+                                break;
+                            }
+                            
+
+
+                        }
+
+                    } else if (useToolChoice == 2) {
+
+                    } else if (useToolChoice == 3) {
+
+                    } else {
+                        System.out.println("Invalid option!");
+                    }
 
                 }
-                for (Ultrasound ultrasound : ultrasounds){
-                    System.out.println("[" + (i+1) + "] " + ultrasound.getName());
-                    i++;
-                }
-                System.out.println("[" + (i+1) + "] Back");
-                int useToolChoice = In.nextInt();
 
                 //[5] User Manuals
             } else if (menuChoice == 5) {
@@ -515,7 +544,8 @@ class DiagnosticTool {
     }
 
     //2 methods to be overriden (at least 1 must be non void)
-    public void activate() {
+    public void activate(Radiologist radiologist) {
+        System.out.println("Welcome Dr" + radiologist.getFullName());
         System.out.println("Starting ...");
     }
 
@@ -570,7 +600,7 @@ class MRIMachine extends DiagnosticTool {
     //at least 1 shuold modify value of a class attribute
     //both should reference an attribute or method of parent class
     @Override
-    public void activate() { //Plan: loop through systemSettings to see if any values are blank. If yes, set default values and then ask the user to reactivate
+    public void activate(Radiologist radiologist) { 
         if (!this.getIsOperational()) {
             System.out.println("MRI Machine " + this.name + " is not operational. Activation failed. ");
             System.out.println("Please reactivate once MRI Machine " + this.name + " is operational");
@@ -591,9 +621,11 @@ class MRIMachine extends DiagnosticTool {
 
         }
         //No issues: activate MRI Machine
-        super.activate();
+        super.activate(radiologist);
         System.out.println("Starting MRI Machine: " + this.name);
         System.out.println("Emitting Magnetic Fields...");
+        radiologist.logScan("Ultrasound");
+        System.out.println("Scan logged for :" + radiologist.getFullName());
 
     }
 
@@ -639,7 +671,7 @@ class Ultrasound extends DiagnosticTool {
     //at least 1 shuold modify value of a class attribute
     //both should reference an attribute or method of parent class
     @Override
-    public void activate() {
+    public void activate(Radiologist radiologist) {
         if (!this.getIsOperational()) {
             System.out.println("Ultrasound " + this.getName() + " is not operational. Activation failed.");
             return;
@@ -653,9 +685,11 @@ class Ultrasound extends DiagnosticTool {
         }
 
         //No issues: activate Ultrasound
-        super.activate();
+        super.activate(radiologist);
         System.out.println("Emitting sound waves");
         System.out.println("Current Probe Equipped: " + this.getCurrentProbeType());
+        radiologist.logScan("Ultrasound");
+        System.out.println("Scan logged for :" + radiologist.getFullName());
     }
 
     @Override
