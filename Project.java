@@ -9,15 +9,21 @@ public class Project {
     public static void main(String[] args) {
 
         //Initialise ArrayLists to store objects
-        ArrayList<Radiologist> radiologists = new ArrayList<>();
-        ArrayList<Ultrasound> ultrasounds = new ArrayList<>();
         ArrayList<MRIMachine> mris = new ArrayList<>();
+        ArrayList<Ultrasound> ultrasounds = new ArrayList<>();
+        ArrayList<Radiologist> radiologists = new ArrayList<>();
+        
 
         //Initialise Objects and add to Databases
         Radiologist drYagami = new Radiologist("Light Yagami");
+        Radiologist drStrife = new Radiologist("Cloud Strife");
         radiologists.add(drYagami);
+        radiologists.add(drStrife);
         Ultrasound ultrasound1 = new Ultrasound("Ultrasound-1", true);
+        Ultrasound ultrasound2 = new Ultrasound("Ultrasound-2", true);
         ultrasounds.add(ultrasound1);
+        ultrasounds.add(ultrasound2);
+
         MRIMachine mri1 = new MRIMachine("MRI-1", true);
         MRIMachine mri2 = new MRIMachine("MRI-2", true);
         mris.add(mri1);
@@ -337,6 +343,7 @@ public class Project {
                     }
                     while (true) {
                         Radiologist selectedRadiologist = radiologists.get(selection - 1);
+                        System.out.println("Select option: ");
                         System.out.println("[1] Set Name");
                         System.out.println("[2] Print Experience Report");
                         System.out.println("[3] Edit Experience ");
@@ -368,20 +375,18 @@ public class Project {
                                 System.out.println("New Radiologist: " + newRadiologistName + " added. ");
                                 break;
                             }
-                        }
-                        if (radiologistFunctionChoice == 2) {
+                        } else if (radiologistFunctionChoice == 2) {
                             selectedRadiologist.printExperienceReport();
                             System.out.println("Press ENTER to go back");
                             In.nextLine();
 
-                        }
-                        if (radiologistFunctionChoice == 3) {
+                        } else if (radiologistFunctionChoice == 3) {
                             while (true) {
                                 int mriMachineExperience = selectedRadiologist.getToolExperience().get("MRIMachine");
                                 int ultrasoundExperience = selectedRadiologist.getToolExperience().get("Ultrasound");
                                 System.out.println("Select tool experience to edit: ");
-                                System.out.println("[1] MRI Machine: " + mriMachineExperience + "uses");
-                                System.out.println("[2] Ultrasound: " + ultrasoundExperience + "uses");
+                                System.out.println("[1] MRI Machine: " + mriMachineExperience + " uses");
+                                System.out.println("[2] Ultrasound: " + ultrasoundExperience + " uses");
                                 System.out.println("[3] Back");
                                 System.out.println("-------------------------------------------------------");
                                 int toolExperienceChoice = In.nextInt();
@@ -389,25 +394,41 @@ public class Project {
 
                                 if (toolExperienceChoice == 1) {
                                     while (true) {
-                                        int value = selectedRadiologist.getToolExperience().get("MRIMachine");
+                                        int currentMRIExperience = selectedRadiologist.getToolExperience().get("MRIMachine");
                                         System.out.println("Enter new MRI Machine experience: ");
                                         System.out.println("-------------------------------------------------------");
                                         int newExperience = In.nextInt();
                                         System.out.println("-------------------------------------------------------");
-                                        if (newExperience < 0){
+                                        if (newExperience < 0) {
                                             System.out.println("Must be a positive number! ");
-                                            continue;
-                                        }else{
-                                            //set new experience
+                                        } else {
+                                            selectedRadiologist.setToolExperience("MRIMachine", newExperience);
+                                            System.out.println("Updated MRI Machine experience from: " + currentMRIExperience + "to -> " + newExperience);
+                                            break;
+
                                         }
 
                                     }
 
-                                }
-                                if (toolExperienceChoice == 2) {
+                                } else if (toolExperienceChoice == 2) {
+                                    while (true) {
+                                        int currentUltrasoundExperience = selectedRadiologist.getToolExperience().get("Ultrasound");
+                                        System.out.println("Enter new Ultrasound experience: ");
+                                        System.out.println("-------------------------------------------------------");
+                                        int newExperience = In.nextInt();
+                                        System.out.println("-------------------------------------------------------");
+                                        if (newExperience < 0) {
+                                            System.out.println("Must be a positive number! ");
+                                        } else {
+                                            selectedRadiologist.setToolExperience("Ultrasound", newExperience);
+                                            System.out.println("Updated Ultrasound experience from: " + currentUltrasoundExperience + "to -> " + newExperience);
+                                            break;
 
-                                }
-                                if (toolExperienceChoice == 3) {
+                                        }
+
+                                    }
+
+                                } else if (toolExperienceChoice == 3) {
                                     break;
 
                                 } else {
@@ -417,6 +438,10 @@ public class Project {
 
                             }
 
+                        } else if (radiologistFunctionChoice == 4) {
+                            break;
+                        } else {
+                            System.out.println("Invalid option!");
                         }
 
                     }
@@ -424,6 +449,20 @@ public class Project {
 
                 //[4] Use Diagnostic Tool
             } else if (menuChoice == 4) {
+                System.out.println("-------------------------------------------------------");
+                System.out.println("Enter Tool to use: ");
+                int i;
+                for (i = 0; i < mris.size(); i++){
+                    System.out.println("[" + (i+1) + "] " + mris.get(i).getName());
+
+                }
+                for (Ultrasound ultrasound : ultrasounds){
+                    System.out.println("[" + (i+1) + "] " + ultrasound.getName());
+                    i++;
+                }
+                System.out.println("[" + (i+1) + "] Back");
+                int useToolChoice = In.nextInt();
+
                 //[5] User Manuals
             } else if (menuChoice == 5) {
                 //[6] Exit
@@ -688,10 +727,10 @@ class Radiologist {
         for (Map.Entry<String, Integer> entry : this.toolExperience.entrySet()) {
             String key = entry.getKey();
             Integer value = entry.getValue();
-            System.out.println(key + ": " + value);
+            System.out.println(key + ": " + value + " uses");
 
         }
-        System.out.println("-------------");
+        System.out.println("-------------------------------------------------------");
 
     }
 
