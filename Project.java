@@ -377,15 +377,43 @@ public class Project {
                         }
                         if (radiologistFunctionChoice == 3) {
                             while (true) {
+                                int mriMachineExperience = selectedRadiologist.getToolExperience().get("MRIMachine");
+                                int ultrasoundExperience = selectedRadiologist.getToolExperience().get("Ultrasound");
                                 System.out.println("Select tool experience to edit: ");
-                                System.out.println("[1] MRI Machine");
-                                System.out.println("[2] Ultrasound");
+                                System.out.println("[1] MRI Machine: " + mriMachineExperience + "uses");
+                                System.out.println("[2] Ultrasound: " + ultrasoundExperience + "uses");
                                 System.out.println("[3] Back");
                                 System.out.println("-------------------------------------------------------");
-                                
+                                int toolExperienceChoice = In.nextInt();
+                                System.out.println("-------------------------------------------------------");
 
+                                if (toolExperienceChoice == 1) {
+                                    while (true) {
+                                        int value = selectedRadiologist.getToolExperience().get("MRIMachine");
+                                        System.out.println("Enter new MRI Machine experience: ");
+                                        System.out.println("-------------------------------------------------------");
+                                        int newExperience = In.nextInt();
+                                        System.out.println("-------------------------------------------------------");
+                                        if (newExperience < 0){
+                                            System.out.println("Must be a positive number! ");
+                                            continue;
+                                        }else{
+                                            //set new experience
+                                        }
 
+                                    }
 
+                                }
+                                if (toolExperienceChoice == 2) {
+
+                                }
+                                if (toolExperienceChoice == 3) {
+                                    break;
+
+                                } else {
+                                    System.out.println("Invalid option!");
+                                    continue;
+                                }
 
                             }
 
