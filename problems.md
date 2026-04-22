@@ -7,3 +7,7 @@
 - index out of bounds when adding new ultrasound error - due to selectedUltrasound
 problenm: Ultrasound selectedUltrasound = ultrasounds.get(selection - 1); was outside of while loop, so if the user chose back or add name, the array was out of bounds
 solution: initialise selectedUltrasound inside the while loop
+
+
+- method getSafetyProtocol seems unsuitable, because an object is required to use it, which is unrealistic
+solution - 

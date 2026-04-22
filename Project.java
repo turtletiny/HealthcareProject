@@ -28,7 +28,7 @@ public class Project {
         mris.add(mri1);
         mris.add(mri2);
 
-        //Maps probe types for ultrasound to an array of their use cases
+        //Maps probe types for ultrasound to an array of their use cases as a "guide" on how to use them
         HashMap<String, ArrayList<String>> probeDatabase = new HashMap<>();
         probeDatabase.put("Linear", new ArrayList<>(Arrays.asList("Vascular", "Breast")));
         probeDatabase.put("Convex", new ArrayList<>(Arrays.asList("Deeper Organ Imaging", "Breast")));
@@ -95,10 +95,11 @@ public class Project {
                             }
                             if (duplicateName) {
                                 continue;
-                            }
+                            }else{
                             mris.add(new MRIMachine(newMRI, true));
                             System.out.println("New MRI Machine: " + newMRI + " added. ");
                             break;
+                            }
 
                         }
 
@@ -313,11 +314,9 @@ public class Project {
                     if (selection < 1 || selection > radiologists.size() + 2) {
                         System.out.println("Invalid option! ");
                         continue; //restarts while loop
-                    }
-                    if (selection == radiologists.size() + 2) { //Back Button
+                    } else if (selection == radiologists.size() + 2) { //Back Button
                         break;
-                    }
-                    if (selection == radiologists.size() + 1) { //Add new Radiologist
+                    } else if (selection == radiologists.size() + 1) { //Add new Radiologist
                         while (true) {
                             boolean duplicateName = false; //Flag to check if new Radiologist name already exists
                             System.out.println("Enter new Radiologist Full Name: ");
@@ -370,8 +369,8 @@ public class Project {
                                 if (duplicateName) {
                                     continue;
                                 }
-                                radiologists.add(new Radiologist(newRadiologistName));
-                                System.out.println("New Radiologist: " + newRadiologistName + " added. ");
+                                System.out.println("Updated Radiologist name from  " + selectedRadiologist.getFullName() + " to -> " + newRadiologistName);
+                                selectedRadiologist.setFullName(newRadiologistName);
                                 break;
                             }
                         } else if (radiologistFunctionChoice == 2) {
@@ -468,23 +467,90 @@ public class Project {
                             System.out.println("-------------------------------------------------------");
                             int useMRIChoice = In.nextInt();
                             System.out.println("-------------------------------------------------------");
-                            if(useMRIChoice > i || useMRIChoice < 1){
+                            if (useMRIChoice > i || useMRIChoice < 1) {
                                 System.out.println("Invalid option!");
-                            }else if(useMRIChoice == i){
+                            } else if (useMRIChoice == i) {
                                 break;
-                            }else{
-                                MRIMachine selectedMRIToUse = mris.get(useMRIChoice - 1);
-                                // selectedMRIToUse.activate();
-                                break;
-                            }
-                            
+                            } else {
+                                while (true) {
+                                    System.out.println("Select Radiologist to operate MRI Machine: ");
+                                    int j;
+                                    for (j = 0; j < radiologists.size(); j++) {
+                                        System.out.println("[" + (j + 1) + "] " + radiologists.get(j).getFullName());
+                                    }
+                                    System.out.println("[" + (j + 1) + "] Back");
+                                    System.out.println("-------------------------------------------------------");
+                                    int radiologistOperatorChoice = In.nextInt();
+                                    System.out.println("-------------------------------------------------------");
+                                    if (radiologistOperatorChoice > (j + 1) || radiologistOperatorChoice < 1) {
+                                        System.out.println("Invalid option! ");
+                                        continue;
+                                    } else if (radiologistOperatorChoice == (j + 1)) {
+                                        break;
 
+                                    } else {
+                                        MRIMachine selectedMRIToUse = mris.get(useMRIChoice - 1);
+                                        Radiologist selecteRadiologist = radiologists.get(radiologistOperatorChoice - 1);
+                                        selectedMRIToUse.activate(selecteRadiologist);
+                                        System.out.println("-------------------------------------------------------");
+                                        break;
+
+                                    }
+
+                                }
+
+                            }
 
                         }
 
                     } else if (useToolChoice == 2) {
 
+                        System.out.println("Select Ultrasound to activate: ");
+                        int i = 1;
+                        for (Ultrasound ultrasound : ultrasounds) {
+                            System.out.println("[" + i + "] " + ultrasound.getName());
+                            i++;
+                        }
+                        System.out.println("[" + i + "] Back");
+                        System.out.println("-------------------------------------------------------");
+                        int useUltrasoundChoice = In.nextInt();
+                        System.out.println("-------------------------------------------------------");
+                        if (useUltrasoundChoice > i || useUltrasoundChoice < 1) {
+                            System.out.println("Invalid option!");
+                        } else if (useUltrasoundChoice == i) {
+                            break;
+                        } else {
+                            while (true) {
+                                System.out.println("Select Radiologist to operate Ultrasound: ");
+                                int j;
+                                for (j = 0; j < radiologists.size(); j++) {
+                                    System.out.println("[" + (j + 1) + "] " + radiologists.get(j).getFullName());
+                                }
+                                System.out.println("[" + (j + 1) + "] Back");
+                                System.out.println("-------------------------------------------------------");
+                                int radiologistOperatorChoice = In.nextInt();
+                                System.out.println("-------------------------------------------------------");
+                                if (radiologistOperatorChoice > (j + 1) || radiologistOperatorChoice < 1) {
+                                    System.out.println("Invalid option! ");
+                                    continue;
+                                } else if (radiologistOperatorChoice == (j + 1)) {
+                                    break;
+
+                                } else {
+                                    Ultrasound selectedUltrasoundToUse = ultrasounds.get(useUltrasoundChoice - 1);
+                                    Radiologist selecteRadiologist = radiologists.get(radiologistOperatorChoice - 1);
+                                    selectedUltrasoundToUse.activate(selecteRadiologist);
+                                    System.out.println("-------------------------------------------------------");
+                                    break;
+
+                                }
+
+                            }
+
+                        }
+
                     } else if (useToolChoice == 3) {
+                        break;
 
                     } else {
                         System.out.println("Invalid option!");
@@ -494,6 +560,63 @@ public class Project {
 
                 //[5] User Manuals
             } else if (menuChoice == 5) {
+                while (true) {
+                    System.out.println("Select option: ");
+                    System.out.println("[1] MRI Machine Manual");
+                    System.out.println("[2] Ultrasound Manual");
+                    System.out.println("[3] General ");
+                    System.out.println("[4] Back");
+                    System.out.println("-------------------------------------------------------");
+                    int manualChoice = In.nextInt();
+                    System.out.println("-------------------------------------------------------");
+                    if (manualChoice == 1) {
+                        while (true) {
+
+                        }
+
+                    } else if (manualChoice == 2) {
+                        while (true) {
+                            System.out.println("Select option: ");
+                            System.out.println("[1] View Manual");
+                            System.out.println("[2] Edit manual");
+                            System.out.println("[3] Back");
+                            System.out.println("-------------------------------------------------------");
+                            int probeManualChoice = In.nextInt();
+                            System.out.println("-------------------------------------------------------");
+                            if (probeManualChoice == 1) {
+                                System.out.println("~Ultrasound Manual~");
+                                System.out.println();
+                                for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) {
+                                    String key = entry.getKey();
+                                    ArrayList<String> value = entry.getValue();
+                                    System.out.println("");
+
+                                }
+
+                            } else if (probeManualChoice == 2) {
+
+                            } else if (probeManualChoice == 3) {
+                                break;
+
+                            } else {
+                                System.out.println("Invalid option!");
+                                continue;
+
+                            }
+                        }
+
+                    } else if (manualChoice == 3) {
+
+                    } else if (manualChoice == 4) {
+                        break;
+
+                    } else {
+                        System.out.println("Invalid option! ");
+                        continue;
+                    }
+
+                }
+
                 //[6] Exit
             } else if (menuChoice == 6) {
                 running = false;
@@ -545,12 +668,17 @@ class DiagnosticTool {
 
     //2 methods to be overriden (at least 1 must be non void)
     public void activate(Radiologist radiologist) {
-        System.out.println("Welcome Dr" + radiologist.getFullName());
+        System.out.println("SAFETY WARNING: " + getSafetyWarning());
+        System.out.println("Welcome Dr " + radiologist.getFullName());
         System.out.println("Starting ...");
     }
 
-    public String getSafetyProtocol() {
-        return "Only authorised persons may use this tool ";
+    public String getSafetyWarning() {
+        String base = "Only authorised persons may use this tool.";
+        if (!this.isOperational) {
+            base += "\n Warning: Tool Not Operational";
+        }
+        return base;
     }
 }
 
@@ -600,7 +728,7 @@ class MRIMachine extends DiagnosticTool {
     //at least 1 shuold modify value of a class attribute
     //both should reference an attribute or method of parent class
     @Override
-    public void activate(Radiologist radiologist) { 
+    public void activate(Radiologist radiologist) {
         if (!this.getIsOperational()) {
             System.out.println("MRI Machine " + this.name + " is not operational. Activation failed. ");
             System.out.println("Please reactivate once MRI Machine " + this.name + " is operational");
@@ -624,16 +752,16 @@ class MRIMachine extends DiagnosticTool {
         super.activate(radiologist);
         System.out.println("Starting MRI Machine: " + this.name);
         System.out.println("Emitting Magnetic Fields...");
-        radiologist.logScan("Ultrasound");
-        System.out.println("Scan logged for :" + radiologist.getFullName());
+        radiologist.logScan("MRIMachine");
+        System.out.println("Scan logged for: " + radiologist.getFullName());
 
     }
 
     @Override
-    public String getSafetyProtocol() {
-        String defaultMessage = super.getSafetyProtocol();
-        return defaultMessage + "\n All personal belongings and metallic objects must be removed ";
-
+    public String getSafetyWarning() {
+        String message = super.getSafetyWarning();
+        message += "\n- ALL METALLIC OBJECTS MUST BE REMOVED BEFORE ENTRY.";
+        return message;
     }
 
     //toString 
@@ -689,14 +817,19 @@ class Ultrasound extends DiagnosticTool {
         System.out.println("Emitting sound waves");
         System.out.println("Current Probe Equipped: " + this.getCurrentProbeType());
         radiologist.logScan("Ultrasound");
-        System.out.println("Scan logged for :" + radiologist.getFullName());
+        System.out.println("Scan logged for: " + radiologist.getFullName());
     }
 
     @Override
-    public String getSafetyProtocol() {
-        String defaultMessage = super.getSafetyProtocol();
-        return defaultMessage + "Thermal index must be monitored during use. ";
-
+    public String getSafetyWarning() {
+        String message = super.getSafetyWarning();
+        if (this.currentProbeType.equals("Pencil")) {
+            message += "\n- WARNING: Pencil probe in use. Do not apply excessive force";
+        } else {
+            message += "\n- Ensure sufficient gel is applied for " + (this.currentProbeType) + " probe.";
+        }
+        message += "\n- Thermal index must be monitored during use.";
+        return message;
     }
 
     //toString 
