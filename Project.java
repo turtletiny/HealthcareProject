@@ -74,7 +74,7 @@ public class Project {
                     int selection = In.nextInt();
                     System.out.println("-------------------------------------------------------");
                     if (selection < 1 || selection > mris.size() + 2) {
-                        System.out.println("Enter a valid MRI Machine! ");
+                        System.out.println("Invalid option! ");
                         continue; //restarts while loop
                     }
                     if (selection == mris.size() + 2) { //Back Button
@@ -95,10 +95,10 @@ public class Project {
                             }
                             if (duplicateName) {
                                 continue;
-                            }else{
-                            mris.add(new MRIMachine(newMRI, true));
-                            System.out.println("New MRI Machine: " + newMRI + " added. ");
-                            break;
+                            } else {
+                                mris.add(new MRIMachine(newMRI, true));
+                                System.out.println("New MRI Machine: " + newMRI + " added. ");
+                                break;
                             }
 
                         }
@@ -119,10 +119,27 @@ public class Project {
                         int settingChoice = In.nextInt();
                         System.out.println("-------------------------------------------------------");
                         if (settingChoice == 1) {
-                            System.out.println("Enter new name: ");
-                            String newName = In.nextLine();
-                            System.out.println("Updated MRI name from: " + selectedMRI.getName() + " to -> " + newName);
-                            selectedMRI.setName(newName);
+                            while (true) {
+                                boolean duplicateName = false; //Flag to check if new MRI name already exists
+                                System.out.println("Enter new MRI Machine name: ");
+                                String newName = In.nextLine();
+                                System.out.println("-------------------------------------------------------");
+                                for (MRIMachine mri : mris) {
+                                    if (mri.getName().equals(newName)) {
+                                        System.out.println("Name already exists!");
+                                        duplicateName = true;
+                                        break;
+                                    }
+                                }
+                                if (duplicateName) {
+                                    continue;
+                                } else {
+                                    System.out.println("Updated MRI name from: " + selectedMRI.getName() + " to -> " + newName);
+                                    selectedMRI.setName(newName);
+                                    break;
+                                }
+
+                            }
 
                         } else if (settingChoice == 2) {
                             selectedMRI.isOperationalToggle();
@@ -375,7 +392,7 @@ public class Project {
                             }
                         } else if (radiologistFunctionChoice == 2) {
                             selectedRadiologist.printExperienceReport();
-                            System.out.println("Press ENTER to go back");
+                            System.out.println("Press [ENTER] to stop reading");
                             In.nextLine();
 
                         } else if (radiologistFunctionChoice == 3) {
@@ -561,67 +578,80 @@ public class Project {
                 //[5] User Manuals
             } else if (menuChoice == 5) {
                 while (true) {
-                    System.out.println("Select option: ");
-                    System.out.println("[1] MRI Machine Manual");
-                    System.out.println("[2] Ultrasound Manual");
-                    System.out.println("[3] General ");
-                    System.out.println("[4] Back");
-                    System.out.println("-------------------------------------------------------");
+                    System.out.println("[1] View Manual");
+                    System.out.println("[2] Edit Probe Types");
+                    System.out.println("[3] Back");
+                    System.out.println("-------");
                     int manualChoice = In.nextInt();
-                    System.out.println("-------------------------------------------------------");
+                    System.out.println("-------");
                     if (manualChoice == 1) {
-                        while (true) {
+                        System.out.println("~Ultrasound Manual~");
+                        System.out.println("Recommended Probe Type Uses: ");
+                        for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) {
+                            String key = entry.getKey();
+                            ArrayList<String> value = entry.getValue();
+                            System.out.println(key + ": " + value);
 
                         }
+                        System.out.println("~MRI Machine Manual~");
+                        System.out.println("Metallic objects must be removed");
+                        System.out.println("~General~");
+                        System.out.println("Only enter text when prompted for text!");
+                        System.out.println("Otherwise program will crash! ");
+                        System.out.println("-------------------------------------------------------");
+                        System.out.println("Press [ENTER] to stop reading ");
+                        In.nextLine();
 
                     } else if (manualChoice == 2) {
                         while (true) {
-                            System.out.println("Select option: ");
-                            System.out.println("[1] View Manual");
-                            System.out.println("[2] Edit manual");
-                            System.out.println("[3] Back");
+                            System.out.println("Enter new probe type name: ");
                             System.out.println("-------------------------------------------------------");
-                            int probeManualChoice = In.nextInt();
+                            String newProbeTypeName = In.nextLine();
                             System.out.println("-------------------------------------------------------");
-                            if (probeManualChoice == 1) {
-                                System.out.println("~Ultrasound Manual~");
-                                System.out.println();
-                                for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) {
-                                    String key = entry.getKey();
-                                    ArrayList<String> value = entry.getValue();
-                                    System.out.println("");
-
-                                }
-
-                            } else if (probeManualChoice == 2) {
-
-                            } else if (probeManualChoice == 3) {
-                                break;
-
-                            } else {
-                                System.out.println("Invalid option!");
+                            if (probeDatabase.containsKey(newProbeTypeName)) {
+                                System.out.println("Probe already exists! ");
                                 continue;
 
+                            } else {
+                                ArrayList<String> newUseCases = new ArrayList<>();
+                                while (true) {
+                                    int useCaseCount = 1;
+                                    System.out.println("Enter use case" + useCaseCount + " for " + newProbeTypeName + "(type: [STOP] to stop adding usecases");
+                                    System.out.println("-------------------------------------------------------");
+                                    String newUseCase = In.nextLine();
+                                    System.out.println("-------------------------------------------------------");
+                                    if (newUseCase.equals("STOP")){
+                                        break;
+                                    }else{
+                                        newUseCases.add(newUseCase);
+                                    }
+
+
+                                }
+                                probeDatabase.put(newProbeTypeName, newUseCases);
+                                System.out.println("Added use cases");
+
+
                             }
+
                         }
 
                     } else if (manualChoice == 3) {
-
-                    } else if (manualChoice == 4) {
                         break;
-
                     } else {
                         System.out.println("Invalid option! ");
                         continue;
                     }
-
                 }
 
-                //[6] Exit
+                //[6] Exit Main Menu
             } else if (menuChoice == 6) {
                 running = false;
+
+                //[Invalid option]
             } else {
-                System.out.println("Choose options 1-5 !");
+                System.out.println("Invalid option!");
+                continue;
 
             }
 
@@ -801,21 +831,22 @@ class Ultrasound extends DiagnosticTool {
     @Override
     public void activate(Radiologist radiologist) {
         if (!this.getIsOperational()) {
-            System.out.println("Ultrasound " + this.getName() + " is not operational. Activation failed.");
+            System.out.println("Ultrasound " + this.name + " is not operational. Activation failed.");
             return;
         }
 
         //if probeType is empty, set to 'not operational'
         if (this.currentProbeType.equals("")) {
-            System.out.println("No probe selected. System safety protocol activated. ");
+            System.out.println("No probe selected. System safety protocol activated: ");
+            System.out.println("Is Operational set to: false");
             this.setIsOperational(false);
             return;
         }
 
         //No issues: activate Ultrasound
         super.activate(radiologist);
-        System.out.println("Emitting sound waves");
         System.out.println("Current Probe Equipped: " + this.getCurrentProbeType());
+        System.out.println("Emitting sound waves");
         radiologist.logScan("Ultrasound");
         System.out.println("Scan logged for: " + radiologist.getFullName());
     }
