@@ -35,8 +35,8 @@ public class Project {
         probeDatabase.put("Pencil", new ArrayList<>(Arrays.asList("Measure Blood Flow", "Measure Blood Sound Speed")));
 
         //Main Menu
-        boolean running = true;
-        while (running) {
+        boolean mainMenuRunning = true;
+        while (mainMenuRunning) {
             System.out.println("  ____           _ _       _                     __  __                                                   _   \r\n"
                     + //
                     " |  _ \\ __ _  __| (_) ___ | | ___   __ _ _   _  |  \\/  | __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_ \r\n"
@@ -63,51 +63,27 @@ public class Project {
             //[1] Configure MRI Machines
             if (menuChoice == 1) {
                 //Select MRI Machine
-                Boolean MRIMenuRunning = true;
-                while (MRIMenuRunning) {
+                boolean mriMenuRunning = true;
+                while (mriMenuRunning) {
                     System.out.println("~MRI Machine Configuration~");
                     System.out.println("Select option: ");
                     for (int i = 0; i < mris.size(); i++) {
                         System.out.println("[" + (i + 1) + "] " + mris.get(i).getName());
                     }
                     System.out.println("[" + (mris.size() + 1) + "] Add new MRI Machine");
-                    System.out.println("[" + (mris.size() + 2) + "] Remove MRI Machine");
-                    System.out.println("[" + (mris.size() + 3) + "] Back");
+                    System.out.println("[" + (mris.size() + 2) + "] Back");
                     System.out.println("-------------------------------------------------------");
-                    int selection = In.nextInt();
+                    int mriMenuChoice = In.nextInt();
                     System.out.println("-------------------------------------------------------");
-                    if (selection < 1 || selection > mris.size() + 3) {
+                    if (mriMenuChoice < 1 || mriMenuChoice > mris.size() + 2) {
                         System.out.println("Invalid option! ");
                         continue; //restarts while loop
-                        //Back button
-                    } else if (selection == mris.size() + 3) {
+
+                    //Back button
+                    } else if (mriMenuChoice == mris.size() + 2) {
                         break;
-                    } else if (selection == mris.size() + 2) {
-                        while (true) {
-                            System.out.println("Select MRI Machine to remove: ");
-                            for (int i = 0; i < mris.size(); i++) {
-                                System.out.println("[" + (i + 1) + "] " + mris.get(i).getName());
-                            }
-                            System.out.println("[" + (mris.size() + 1) + "] Back");
-                            System.out.println("-------------------------------------------------------");
-                            int removeMRIChoice = In.nextInt();
-                            System.out.println("-------------------------------------------------------");
-                            if (removeMRIChoice < 1 || removeMRIChoice > mris.size() + 1) {
-                                System.out.println("Invalid option! ");
-                                continue;
-                            } else if (removeMRIChoice == (mris.size() + 1)) {
-                                break;
 
-                            } else {
-                                String removedMRIName = mris.get(removeMRIChoice - 1).getName();
-                                mris.remove(removeMRIChoice - 1);
-                                System.out.println("Removed " + removedMRIName);
-                                break;
-
-                            }
-                        }
-
-                    } else if (selection == mris.size() + 1) { //Add new MRI Machine
+                    } else if (mriMenuChoice == mris.size() + 1) { //Add new MRI Machine
                         while (true) {
                             boolean duplicateName = false; //Flag to check if new MRI name already exists
                             System.out.println("Enter new MRI Machine name: ");
@@ -134,7 +110,7 @@ public class Project {
 
                     //Choose Settings 
                     while (true) {
-                        MRIMachine selectedMRI = mris.get(selection - 1);
+                        MRIMachine selectedMRI = mris.get(mriMenuChoice - 1);
                         System.out.println(selectedMRI);
                         System.out.println("Select setting to edit: ");
                         System.out.println("[1] Set Name");
@@ -209,7 +185,7 @@ public class Project {
                                 double magneticFieldStrength = In.nextDouble();
                                 System.out.println("-------------------------------------------------------");
                                 if (magneticFieldStrength > 8 || magneticFieldStrength < 0) {
-                                    System.out.println("Must be between 0 and 8.0");
+                                    System.out.println("Must be between 0 and 8.0!");
 
                                 } else {
                                     selectedMRI.setSystemSetting("MagneticFieldStrength", magneticFieldStrength + "T");
@@ -236,15 +212,15 @@ public class Project {
                 System.out.println("[" + (ultrasounds.size() + 1) + "] Add new Ultrasound");
                 System.out.println("[" + (ultrasounds.size() + 2) + "] Back");
                 System.out.println("-------------------------------------------------------");
-                int selection = In.nextInt();
+                int ultrasoundMenuChoice = In.nextInt();
                 System.out.println("-------------------------------------------------------");
-                if (selection < 1 || selection > ultrasounds.size() + 2) {
+                if (ultrasoundMenuChoice < 1 || ultrasoundMenuChoice > ultrasounds.size() + 2) {
                     System.out.println("Enter a valid Ultrasound! ");
                     continue; //restarts while loop
 
                     //Add new Ultrasound
                 }
-                if (selection == (ultrasounds.size() + 1)) {
+                if (ultrasoundMenuChoice == (ultrasounds.size() + 1)) {
                     while (true) {
                         boolean duplicateName = false; //Flag to check if new Ultrasound name already exists in ultrasoundDatabase
 
@@ -270,12 +246,12 @@ public class Project {
 
                 }
                 //Back button
-                if (selection == ultrasounds.size() + 2) {
+                if (ultrasoundMenuChoice == ultrasounds.size() + 2) {
                     break;
                 }
 
                 while (true) {
-                    Ultrasound selectedUltrasound = ultrasounds.get(selection - 1);
+                    Ultrasound selectedUltrasound = ultrasounds.get(ultrasoundMenuChoice - 1);
                     System.out.println(selectedUltrasound);
                     System.out.println("Select setting to edit: ");
                     System.out.println("[1] Set Name");
@@ -353,14 +329,14 @@ public class Project {
                     System.out.println("[" + (radiologists.size() + 1) + "] Add new Radiologist");
                     System.out.println("[" + (radiologists.size() + 2) + "] Back");
                     System.out.println("-------------------------------------------------------");
-                    int selection = In.nextInt();
+                    int radiologistMenuChoice = In.nextInt();
                     System.out.println("-------------------------------------------------------");
-                    if (selection < 1 || selection > radiologists.size() + 2) {
+                    if (radiologistMenuChoice < 1 || radiologistMenuChoice > radiologists.size() + 2) {
                         System.out.println("Invalid option! ");
                         continue; //restarts while loop
-                    } else if (selection == radiologists.size() + 2) { //Back Button
+                    } else if (radiologistMenuChoice == radiologists.size() + 2) { //Back Button
                         break;
-                    } else if (selection == radiologists.size() + 1) { //Add new Radiologist
+                    } else if (radiologistMenuChoice == radiologists.size() + 1) { //Add new Radiologist
                         while (true) {
                             boolean duplicateName = false; //Flag to check if new Radiologist name already exists
                             System.out.println("Enter new Radiologist Full Name: ");
@@ -384,7 +360,7 @@ public class Project {
 
                     }
                     while (true) {
-                        Radiologist selectedRadiologist = radiologists.get(selection - 1);
+                        Radiologist selectedRadiologist = radiologists.get(radiologistMenuChoice - 1);
                         System.out.println("Select option: ");
                         System.out.println("[1] Set Name");
                         System.out.println("[2] Print Experience Report");
@@ -534,8 +510,8 @@ public class Project {
 
                                     } else {
                                         MRIMachine selectedMRIToUse = mris.get(useMRIChoice - 1);
-                                        Radiologist selecteRadiologist = radiologists.get(radiologistOperatorChoice - 1);
-                                        selectedMRIToUse.activate(selecteRadiologist);
+                                        Radiologist selectedRadiologist = radiologists.get(radiologistOperatorChoice - 1);
+                                        selectedMRIToUse.activate(selectedRadiologist);
                                         System.out.println("-------------------------------------------------------");
                                         break;
 
@@ -622,10 +598,10 @@ public class Project {
 
                         }
                         System.out.println("~MRI Machine Manual~");
-                        System.out.println("Metallic objects must be removed");
+                        System.out.println("All Metallic objects must be removed");
+                        System.out.println("");
                         System.out.println("~General~");
-                        System.out.println("Only enter text when prompted for text!");
-                        System.out.println("Otherwise program will crash! ");
+                        System.out.println("Only enter text when prompted for text, Otherwise program will crash");
                         System.out.println("-------------------------------------------------------");
                         System.out.println("Press [ENTER] to stop reading ");
                         In.nextLine();
@@ -731,7 +707,7 @@ public class Project {
 
                 //[6] Exit Main Menu
             } else if (menuChoice == 6) {
-                running = false;
+                mainMenuRunning = false;
 
                 //[Invalid option]
             } else {
@@ -833,11 +809,7 @@ class MRIMachine extends DiagnosticTool {
 
     }
 
-    public void removeSystemSetting(String key) {
-        this.systemSettings.remove(key);
-        System.out.println("Removed MRI setting: " + key);
-
-    }
+    
 
     //overrides of 2 methods
     //at least 1 shuold modify value of a class attribute
@@ -854,7 +826,7 @@ class MRIMachine extends DiagnosticTool {
         for (Map.Entry<String, String> entry : this.systemSettings.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            if (value.equals("")) {
+            if (value.equals("") || value.equals("none")) {
                 System.out.println("Value not selected for parameter: " + key + ". System safety protocol activated: ");
                 System.out.println("Is Operational set to: false");
                 this.setIsOperational(false);
@@ -899,7 +871,7 @@ class Ultrasound extends DiagnosticTool {
 
     public Ultrasound(String name, boolean isOperational) {
         super(name, isOperational);
-        this.currentProbeType = ""; //initialise currentProbeType to blank by default
+        this.currentProbeType = "none"; //initialise currentProbeType to blank by default
 
     }
 
@@ -924,7 +896,7 @@ class Ultrasound extends DiagnosticTool {
         }
 
         //if probeType is empty, set to 'not operational'
-        if (this.currentProbeType.equals("")) {
+        if (this.currentProbeType.equals("") || this.currentProbeType.equals("none")) {
             System.out.println("No probe selected. System safety protocol activated: ");
             System.out.println("Is Operational set to: false");
             this.setIsOperational(false);
