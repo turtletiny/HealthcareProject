@@ -23,3 +23,11 @@ String removedMRIName = mris.get(removeMRIChoice - 1).getName();
                             break;
 
 NVM its still an issue
+
+
+
+problem - no way i have to add this much code just to edit the usecase :sob: 
+
+
+
+- if you dont add any usecases, it still says STOP - i dont care though 
