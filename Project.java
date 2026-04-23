@@ -35,7 +35,7 @@ public class Project {
         probeDatabase.put("Pencil", new ArrayList<>(Arrays.asList("Measure Blood Flow", "Measure Blood Sound Speed")));
 
         //Main Menu
-        Boolean running = true;
+        boolean running = true;
         while (running) {
             System.out.println("  ____           _ _       _                     __  __                                                   _   \r\n"
                     + //
@@ -708,15 +708,14 @@ public class Project {
                                     if (!newUseCase.equals("STOP")) {
                                         selectedProbeUseCases.add(newUseCase);
 
-                                    }else{
+                                    } else {
                                         probeDatabase.put(selectedProbe, selectedProbeUseCases);
                                         System.out.println("Added use cases");
                                         break;
 
                                     }
                                     probeDatabase.put(selectedProbe, selectedProbeUseCases);
-                                    
-                                    
+
                                 }
 
                             }
@@ -856,11 +855,14 @@ class MRIMachine extends DiagnosticTool {
             String key = entry.getKey();
             String value = entry.getValue();
             if (value.equals("")) {
-                System.out.println("Value not selected for parameter: " + key + ". Activation failed. ");
-                System.out.println("Initialising default settings values for " + this.name);
-                System.out.println("Please reactivate once MRI Machine " + this.name + " has all settings initialised");
-
+                System.out.println("Value not selected for parameter: " + key + ". System safety protocol activated: ");
+                System.out.println("Is Operational set to: false");
+                this.setIsOperational(false);
+                System.out.println("Please reactivate once Ultrasound " + this.name + " has all settings initialised");
                 return;
+                
+
+                
             }
 
         }
