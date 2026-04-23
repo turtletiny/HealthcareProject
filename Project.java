@@ -62,25 +62,51 @@ public class Project {
             //[1] Configure MRI Machines
             if (menuChoice == 1) {
                 //Select MRI Machine
-                while (true) {
+                Boolean MRIMenuRunning = true;
+                while (MRIMenuRunning) {
                     System.out.println("~MRI Machine Configuration~");
-                    System.out.println("Select MRI Machine to configure: ");
+                    System.out.println("Select option: ");
                     for (int i = 0; i < mris.size(); i++) {
                         System.out.println("[" + (i + 1) + "] " + mris.get(i).getName());
                     }
                     System.out.println("[" + (mris.size() + 1) + "] Add new MRI Machine");
-                    System.out.println("[" + (mris.size() + 2) + "] Back");
+                    System.out.println("[" + (mris.size() + 2) + "] Remove MRI Machine");
+                    System.out.println("[" + (mris.size() + 3) + "] Back");
                     System.out.println("-------------------------------------------------------");
                     int selection = In.nextInt();
                     System.out.println("-------------------------------------------------------");
-                    if (selection < 1 || selection > mris.size() + 2) {
+                    if (selection < 1 || selection > mris.size() + 3) {
                         System.out.println("Invalid option! ");
                         continue; //restarts while loop
-                    }
-                    if (selection == mris.size() + 2) { //Back Button
+                        //Back button
+                    } else if (selection == mris.size() + 3) {
                         break;
+                    } else if (selection == mris.size() + 2) {
+                        while (true){
+                        System.out.println("Select MRI Machine to remove: ");
+                        for (int i = 0; i < mris.size(); i++) {
+                            System.out.println("[" + (i + 1) + "] " + mris.get(i).getName());
+                        }
+                        System.out.println("[" + (mris.size() + 1) + "] Back");
+                        System.out.println("-------------------------------------------------------");
+                        int removeMRIChoice = In.nextInt();
+                        System.out.println("-------------------------------------------------------");
+                        if (removeMRIChoice < 1 || removeMRIChoice > mris.size() + 1) {
+                            System.out.println("Invalid option! ");
+                            continue;
+                        } else if (removeMRIChoice == (mris.size() + 1)) {
+                            break;
+
+                        } else {
+                            String removedMRIName = mris.get(removeMRIChoice - 1).getName();
+                            mris.remove(removeMRIChoice - 1);
+                            System.out.println("Removed " + removedMRIName);
+                            break;
+
+                        }
                     }
-                    if (selection == mris.size() + 1) { //Add new MRI Machine
+
+                    } else if (selection == mris.size() + 1) { //Add new MRI Machine
                         while (true) {
                             boolean duplicateName = false; //Flag to check if new MRI name already exists
                             System.out.println("Enter new MRI Machine name: ");
@@ -614,23 +640,22 @@ public class Project {
 
                             } else {
                                 ArrayList<String> newUseCases = new ArrayList<>();
+                                int useCaseCount = 1;
                                 while (true) {
-                                    int useCaseCount = 1;
-                                    System.out.println("Enter use case" + useCaseCount + " for " + newProbeTypeName + "(type: [STOP] to stop adding usecases");
-                                    System.out.println("-------------------------------------------------------");
+                                    System.out.println("Enter use case " + useCaseCount + " for " + newProbeTypeName + " (type: [STOP] to stop adding usecases)");
                                     String newUseCase = In.nextLine();
+                                    useCaseCount++;
                                     System.out.println("-------------------------------------------------------");
-                                    if (newUseCase.equals("STOP")){
+                                    if (newUseCase.equals("STOP")) {
                                         break;
-                                    }else{
+                                    } else {
                                         newUseCases.add(newUseCase);
                                     }
-
 
                                 }
                                 probeDatabase.put(newProbeTypeName, newUseCases);
                                 System.out.println("Added use cases");
-
+                                break;
 
                             }
 

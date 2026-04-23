@@ -11,3 +11,15 @@ solution: initialise selectedUltrasound inside the while loop
 
 - method getSafetyProtocol seems unsuitable, because an object is required to use it, which is unrealistic
 solution - 
+
+
+
+problem: index out of bounds becaues printing name of just removed item
+
+solution: get the name as a string first
+String removedMRIName = mris.get(removeMRIChoice - 1).getName();
+                            mris.remove(removeMRIChoice - 1);
+                            System.out.println("Removed " + removedMRIName);
+                            break;
+
+NVM its still an issue
