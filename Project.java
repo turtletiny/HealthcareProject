@@ -809,7 +809,7 @@ class MRIMachine extends DiagnosticTool {
         super(name, isOperational);
         this.systemSettings = new HashMap<>();
 
-        //initialise default settings with no values yet
+        //initialise default settings
         this.systemSettings.put("MagneticFieldStrength", "none");
         this.systemSettings.put("CoilType", "none");
 
@@ -877,7 +877,6 @@ class MRIMachine extends DiagnosticTool {
     }
 
     //toString 
-    @Override
     public String toString() {
         String report = "MRI Machine: " + this.getName() + "\n";
         report += "Is Operational: " + this.IsOperational() + "\n";
@@ -946,7 +945,6 @@ class Ultrasound extends DiagnosticTool {
     }
 
     //toString 
-    @Override
     public String toString() {
         String report = "Ultrasound: " + this.getName() + "\n";
         report += "Is Operational: " + this.IsOperational() + "\n";
