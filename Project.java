@@ -15,9 +15,10 @@ public class Project {
 
         //Initialise Objects and add to Databases
         Radiologist drYagami = new Radiologist("Light Yagami");
-        Radiologist drStrife = new Radiologist("Cloud Strife");
+        Radiologist drSparda = new Radiologist("Dante Sparda");
         radiologists.add(drYagami);
-        radiologists.add(drStrife);
+        radiologists.add(drSparda);
+
         Ultrasound ultrasound1 = new Ultrasound("Ultrasound-1", true);
         Ultrasound ultrasound2 = new Ultrasound("Ultrasound-2", true);
         ultrasounds.add(ultrasound1);
@@ -28,11 +29,11 @@ public class Project {
         mris.add(mri1);
         mris.add(mri2);
 
-        //Maps probe types for ultrasound to an array of their use cases as a "guide" on how to use them
+        //Maps probe types for ultrasound to an array of their use cases as a "guide" on how to use them in the manual
         HashMap<String, ArrayList<String>> probeDatabase = new HashMap<>();
-        probeDatabase.put("Linear", new ArrayList<>(Arrays.asList("Vascular", "Breast")));
+        probeDatabase.put("Linear", new ArrayList<>(Arrays.asList("Vascular", "Breast", "Lung")));
         probeDatabase.put("Convex", new ArrayList<>(Arrays.asList("Deeper Organ Imaging", "Breast")));
-        probeDatabase.put("Pencil", new ArrayList<>(Arrays.asList("Measure Blood Flow", "Measure Blood Sound Speed")));
+        probeDatabase.put("Pencil", new ArrayList<>(Arrays.asList("Measure Blood Flow", "Measure Blood Sound Speed", "Cardiac")));
 
         //Main Menu
         boolean mainMenuRunning = true;
@@ -57,11 +58,11 @@ public class Project {
             System.out.println("[5] View/Edit User Manual ");
             System.out.println("[6] Exit ");
             System.out.println("-------------------------------------------------------");
-            int menuChoice = In.nextInt();
+            int mainMenuChoice = In.nextInt();
             System.out.println("-------------------------------------------------------");
 
             //[1] Configure MRI Machines
-            if (menuChoice == 1) {
+            if (mainMenuChoice == 1) {
                 //Select MRI Machine
                 boolean mriMenuRunning = true;
                 while (mriMenuRunning) {
@@ -79,248 +80,271 @@ public class Project {
                         System.out.println("Invalid option! ");
                         continue; //restarts while loop
 
-                    //Back button
+                        //Back button
                     } else if (mriMenuChoice == mris.size() + 2) {
                         break;
 
-                    } else if (mriMenuChoice == mris.size() + 1) { //Add new MRI Machine
-                        while (true) {
+                        //Add new MRI Machine
+                    } else if (mriMenuChoice == mris.size() + 1) {
+                        boolean addMriRunning = true;
+                        while (addMriRunning) {
                             boolean duplicateName = false; //Flag to check if new MRI name already exists
                             System.out.println("Enter new MRI Machine name: ");
                             String newMRI = In.nextLine();
                             System.out.println("-------------------------------------------------------");
+
+                            //Loop through mri database - if it finds a name equal to input name, set flag to true
                             for (MRIMachine mri : mris) {
                                 if (mri.getName().equals(newMRI)) {
                                     System.out.println("Name already exists!");
                                     duplicateName = true;
-                                    break;
+                                    break; //stop searching through database once found to save memory
                                 }
                             }
-                            if (duplicateName) {
-                                continue;
-                            } else {
+                            if (!duplicateName) {
                                 mris.add(new MRIMachine(newMRI, true));
                                 System.out.println("New MRI Machine: " + newMRI + " added. ");
-                                break;
+                                addMriRunning = false;
+
                             }
 
                         }
+                        //Choose Settings for selected MRI
+                    } else {
+                        boolean mriSettingsMenuRunning = true;
+                        while (mriSettingsMenuRunning) {
+                            MRIMachine selectedMRI = mris.get(mriMenuChoice - 1);
+                            System.out.println(selectedMRI);
+                            System.out.println("Select setting to edit: ");
+                            System.out.println("[1] Set Name");
+                            System.out.println("[2] Toggle Operational");
+                            System.out.println("[3] Set Coil Type");
+                            System.out.println("[4] Set Magnetic Field Strength");
+                            System.out.println("[5] Back");
+                            System.out.println("-------------------------------------------------------");
+                            int mriSettingChoice = In.nextInt();
+                            System.out.println("-------------------------------------------------------");
 
-                    }
+                            //[1] Set name
+                            if (mriSettingChoice == 1) {
+                                while (true) {
+                                    boolean duplicateName = false; //Flag to check if new MRI name already exists
+                                    System.out.println("Enter new MRI Machine name: ");
+                                    String newName = In.nextLine();
+                                    System.out.println("-------------------------------------------------------");
+                                    for (MRIMachine mri : mris) {
+                                        if (mri.getName().equals(newName)) {
+                                            System.out.println("Name already exists!");
+                                            duplicateName = true;
+                                            break; //stop searching through database once found to save memory
+                                        }
+                                    }
+                                    //if duplicate name is false, set the name and exit loop
+                                    if (!duplicateName) {
+                                        System.out.println("Updated MRI name from: " + selectedMRI.getName() + " to -> " + newName);
+                                        selectedMRI.setName(newName);
+                                        break;
 
-                    //Choose Settings 
-                    while (true) {
-                        MRIMachine selectedMRI = mris.get(mriMenuChoice - 1);
-                        System.out.println(selectedMRI);
-                        System.out.println("Select setting to edit: ");
-                        System.out.println("[1] Set Name");
-                        System.out.println("[2] Toggle Operational");
-                        System.out.println("[3] Set Coil Type");
-                        System.out.println("[4] Set Magnetic Field Strength");
-                        System.out.println("[5] Back");
-                        System.out.println("-------------------------------------------------------");
-                        int settingChoice = In.nextInt();
-                        System.out.println("-------------------------------------------------------");
-                        if (settingChoice == 1) {
-                            while (true) {
-                                boolean duplicateName = false; //Flag to check if new MRI name already exists
-                                System.out.println("Enter new MRI Machine name: ");
-                                String newName = In.nextLine();
-                                System.out.println("-------------------------------------------------------");
-                                for (MRIMachine mri : mris) {
-                                    if (mri.getName().equals(newName)) {
-                                        System.out.println("Name already exists!");
-                                        duplicateName = true;
+                                    }
+
+                                }
+                                //[2] Toggle Operational
+                            } else if (mriSettingChoice == 2) {
+                                selectedMRI.isOperationalToggle();
+                                System.out.println("Updated MRI Operational state from: " + !selectedMRI.IsOperational() + " to -> " + selectedMRI.IsOperational());
+
+                                //[3] Set Coil Type
+                            } else if (mriSettingChoice == 3) {
+                                while (true) {
+                                    System.out.println("Enter coil type:");
+                                    System.out.println("[1] Head");
+                                    System.out.println("[2] Body");
+                                    System.out.println("[3] Extremity");
+                                    System.out.println("[4] Back");
+                                    System.out.println("-------------------------------------------------------");
+                                    int coilChoice = In.nextInt();
+                                    System.out.println("-------------------------------------------------------");
+
+                                    if (coilChoice == 1) {
+                                        selectedMRI.setSystemSetting("CoilType", "Head");
+                                        break;
+
+                                    } else if (coilChoice == 2) {
+                                        selectedMRI.setSystemSetting("CoilType", "Body");
+                                        break;
+
+                                    } else if (coilChoice == 3) {
+                                        selectedMRI.setSystemSetting("CoilType", "Extremity");
+                                        break;
+
+                                    } else if (coilChoice == 4) {
+                                        break;
+
+                                    } else {
+                                        System.out.println("Invalid option!");
+
+                                    }
+
+                                }
+                                //[4] Set Magnetic Field Strength
+                            } else if (mriSettingChoice == 4) {
+                                while (true) {
+                                    System.out.println("Enter Magnetic Field Strength (max 8): ");
+                                    System.out.println("-------------------------------------------------------");
+                                    double magneticFieldStrength = In.nextDouble();
+                                    System.out.println("-------------------------------------------------------");
+                                    if (magneticFieldStrength > 8 || magneticFieldStrength < 0) {
+                                        System.out.println("Must be between 0 and 8.0!");
+
+                                    } else {
+                                        selectedMRI.setSystemSetting("MagneticFieldStrength", magneticFieldStrength + "T");
                                         break;
                                     }
-                                }
-                                if (duplicateName) {
-                                    continue;
-                                } else {
-                                    System.out.println("Updated MRI name from: " + selectedMRI.getName() + " to -> " + newName);
-                                    selectedMRI.setName(newName);
-                                    break;
+
                                 }
 
+                            } else if (mriSettingChoice == 5) {
+                                mriSettingsMenuRunning = false;
+
+                            } else {
+                                System.out.println("Enter a valid option.");
                             }
-
-                        } else if (settingChoice == 2) {
-                            selectedMRI.isOperationalToggle();
-                            System.out.println("Updated MRI Operational state from: " + !selectedMRI.getIsOperational() + " to -> " + selectedMRI.getIsOperational());
-
-                        } else if (settingChoice == 3) {
-                            while (true) {
-                                System.out.println("Enter coil type:");
-                                System.out.println("[1] Head");
-                                System.out.println("[2] Body");
-                                System.out.println("[3] Extremity");
-                                System.out.println("-------------------------------------------------------");
-                                int coilChoice = In.nextInt();
-                                System.out.println("-------------------------------------------------------");
-
-                                if (coilChoice == 1) {
-                                    selectedMRI.setSystemSetting("CoilType", "Head");
-                                    break;
-
-                                } else if (coilChoice == 2) {
-                                    selectedMRI.setSystemSetting("CoilType", "Body");
-                                    break;
-
-                                } else if (coilChoice == 3) {
-                                    selectedMRI.setSystemSetting("CoilType", "Extremity");
-                                    break;
-
-                                } else {
-                                    System.out.println("Invalid option! ");
-
-                                }
-                                System.out.println("-------------------------------------------------------");
-
-                            }
-
-                        } else if (settingChoice == 4) {
-                            while (true) {
-                                System.out.println("Enter Magnetic Field Strength (max 8): ");
-                                System.out.println("-------------------------------------------------------");
-                                double magneticFieldStrength = In.nextDouble();
-                                System.out.println("-------------------------------------------------------");
-                                if (magneticFieldStrength > 8 || magneticFieldStrength < 0) {
-                                    System.out.println("Must be between 0 and 8.0!");
-
-                                } else {
-                                    selectedMRI.setSystemSetting("MagneticFieldStrength", magneticFieldStrength + "T");
-                                    break;
-                                }
-
-                            }
-
-                        } else if (settingChoice == 5) {
-                            break;
-                        } else {
-                            System.out.println("Enter a valid option.");
                         }
                     }
                 }
                 //[2] Configure Ultrasounds
-            } else if (menuChoice == 2) {
+            } else if (mainMenuChoice == 2) {
+
                 //Choose Ultrasound
-                System.out.println("~Ultrasound Configuration~");
-                System.out.println("Select Ultrasound to configure: ");
-                for (int i = 0; i < ultrasounds.size(); i++) {
-                    System.out.println("[" + (i + 1) + "] " + ultrasounds.get(i).getName());
-                }
-                System.out.println("[" + (ultrasounds.size() + 1) + "] Add new Ultrasound");
-                System.out.println("[" + (ultrasounds.size() + 2) + "] Back");
-                System.out.println("-------------------------------------------------------");
-                int ultrasoundMenuChoice = In.nextInt();
-                System.out.println("-------------------------------------------------------");
-                if (ultrasoundMenuChoice < 1 || ultrasoundMenuChoice > ultrasounds.size() + 2) {
-                    System.out.println("Enter a valid Ultrasound! ");
-                    continue; //restarts while loop
-
-                    //Add new Ultrasound
-                }
-                if (ultrasoundMenuChoice == (ultrasounds.size() + 1)) {
-                    while (true) {
-                        boolean duplicateName = false; //Flag to check if new Ultrasound name already exists in ultrasoundDatabase
-
-                        System.out.println("Enter new Ultrasound name: ");
-                        String newUltrasound = In.nextLine();
-                        System.out.println("-------------------------------------------------------");
-                        for (Ultrasound ultrasound : ultrasounds) {
-                            if (ultrasound.getName().equals(newUltrasound)) {
-                                System.out.println("Name already exists! ");
-                                duplicateName = true;
-                                break;
-
-                            }
-
-                        }
-                        if (duplicateName) {
-                            continue;
-                        }
-                        ultrasounds.add(new Ultrasound(newUltrasound, true));
-                        System.out.println("New Ultrasound: " + newUltrasound + " added. ");
-                        break;
+                boolean ultrasoundMenuRunning = true;
+                while (ultrasoundMenuRunning) {
+                    System.out.println("~Ultrasound Configuration~");
+                    System.out.println("Select Ultrasound to configure: ");
+                    for (int i = 0; i < ultrasounds.size(); i++) {
+                        System.out.println("[" + (i + 1) + "] " + ultrasounds.get(i).getName());
                     }
-
-                }
-                //Back button
-                if (ultrasoundMenuChoice == ultrasounds.size() + 2) {
-                    break;
-                }
-
-                while (true) {
-                    Ultrasound selectedUltrasound = ultrasounds.get(ultrasoundMenuChoice - 1);
-                    System.out.println(selectedUltrasound);
-                    System.out.println("Select setting to edit: ");
-                    System.out.println("[1] Set Name");
-                    System.out.println("[2] Toggle Operational");
-                    System.out.println("[3] Set Probe Type");
-
-                    System.out.println("[4] Back");
+                    System.out.println("[" + (ultrasounds.size() + 1) + "] Add new Ultrasound");
+                    System.out.println("[" + (ultrasounds.size() + 2) + "] Back");
                     System.out.println("-------------------------------------------------------");
-                    int settingChoice = In.nextInt();
+                    int ultrasoundMenuChoice = In.nextInt();
                     System.out.println("-------------------------------------------------------");
-                    if (settingChoice == 1) {
-                        System.out.println("Enter new name: ");
-                        String newName = In.nextLine();
-                        System.out.println("Updated Ultrasound name from: " + selectedUltrasound.getName() + " to -> " + newName);
-                        selectedUltrasound.setName(newName);
 
-                    } else if (settingChoice == 2) {
-                        selectedUltrasound.isOperationalToggle();
-                        System.out.println("Updated MRI Operational state from: " + !selectedUltrasound.getIsOperational() + " to -> " + selectedUltrasound.getIsOperational());
-
-                    } else if (settingChoice == 3) {
+                    if (ultrasoundMenuChoice < 1 || ultrasoundMenuChoice > (ultrasounds.size() + 2)) {
+                        System.out.println("Invalid option! ");
+                        continue; //restarts while loop
+                    } //Back button
+                    else if (ultrasoundMenuChoice == ultrasounds.size() + 2) {
+                        ultrasoundMenuRunning = false;
+                    } //Add new Ultrasound
+                    else if (ultrasoundMenuChoice == (ultrasounds.size() + 1)) {
                         while (true) {
+                            boolean duplicateName = false; //Flag to check if new Ultrasound name already exists in ultrasound Database
 
-                            //Print out options
-                            System.out.println("Select probe type: ");
-                            int probeNum = 1;
-                            for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) {
-                                String key = entry.getKey();
-                                System.out.println("[" + probeNum + "] " + key);
-                                probeNum++;
-                            }
-                            System.out.println("[" + (probeDatabase.size() + 1) + "] Back");
+                            System.out.println("Enter new Ultrasound name: ");
+                            String newUltrasoundName = In.nextLine();
+                            System.out.println("-------------------------------------------------------");
+                            for (Ultrasound ultrasound : ultrasounds) {
+                                if (ultrasound.getName().equals(newUltrasoundName)) {
+                                    System.out.println("Name already exists! ");
+                                    duplicateName = true;
+                                    break;
 
-                            int probeTypeChoice = In.nextInt();
-                            if (probeTypeChoice > probeDatabase.size() + 1) {
-                                System.out.println("Invalid option!");
-                                continue;
+                                }
+
                             }
-                            if (probeTypeChoice == probeDatabase.size() + 1) { //Back button
+                            if (!duplicateName) {
+                                ultrasounds.add(new Ultrasound(newUltrasoundName, true));
+                                System.out.println("New Ultrasound: " + newUltrasoundName + " added. ");
                                 break;
                             }
 
+                        }
+                        //Configure specific ultrasound object
+                    } else {
+                        boolean ultrasoundSettingsMenuRunning = true;
+                        while (ultrasoundSettingsMenuRunning) {
+                            Ultrasound selectedUltrasound = ultrasounds.get(ultrasoundMenuChoice - 1);
+                            System.out.println(selectedUltrasound);
+                            System.out.println("Select setting to edit: ");
+                            System.out.println("[1] Set Name");
+                            System.out.println("[2] Toggle Operational");
+                            System.out.println("[3] Set Probe Type");
+                            System.out.println("[4] Back");
                             System.out.println("-------------------------------------------------------");
-                            String newProbeType = "";
+                            int ultrasoundSettingChoice = In.nextInt();
                             System.out.println("-------------------------------------------------------");
-                            int count = 1;
-                            for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) { //get the nth key in probeDatabase (n = user probe type choice)
-                                if (count == probeTypeChoice) {
-                                    newProbeType += entry.getKey();
-                                    break; //exit loop once nth key is found
+
+                            //[1] Set Name
+                            if (ultrasoundSettingChoice == 1) {
+                                System.out.println("Enter new name: ");
+                                String newName = In.nextLine();
+                                System.out.println("Updated Ultrasound name from: " + selectedUltrasound.getName() + " to -> " + newName);
+                                selectedUltrasound.setName(newName);
+
+                                //[2] Toggle Operational
+                            } else if (ultrasoundSettingChoice == 2) {
+                                selectedUltrasound.isOperationalToggle();
+                                System.out.println("Updated Ultrasound state from: " + !selectedUltrasound.IsOperational() + " to -> " + selectedUltrasound.IsOperational());
+
+                                //[3] Set Probe Type
+                            } else if (ultrasoundSettingChoice == 3) {
+
+                                while (true) {
+                                    //Print out options
+                                    System.out.println("Select probe type: ");
+                                    int probeNum = 1;
+                                    for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) {
+                                        String key = entry.getKey();
+                                        System.out.println("[" + probeNum + "] " + key);
+                                        probeNum++;
+                                    }
+                                    System.out.println("[" + (probeDatabase.size() + 1) + "] Back");
+                                    System.out.println("-------------------------------------------------------");
+                                    int probeTypeChoice = In.nextInt();
+                                    System.out.println("-------------------------------------------------------");
+
+                                    //Error
+                                    if (probeTypeChoice > probeDatabase.size() + 1) {
+                                        System.out.println("Invalid option!");
+                                        continue;
+
+                                    //Back Button
+                                    } else if (probeTypeChoice == probeDatabase.size() + 1) { 
+                                        break;
+
+                                    } else {
+                                        //loop through probe Database, incrementing n every loop until n == user selection
+                                        String newProbeType = "";
+                                        int n = 1;
+                                        for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) { 
+                                            if (n == probeTypeChoice) { 
+                                                newProbeType += entry.getKey(); //get the name of the probe
+                                                break; //stop looping though probe database
+                                            }
+                                            n++;
+                                        }
+                                        System.out.println("Updated Ultrasound probe type from: " + selectedUltrasound.getCurrentProbeType() + " to -> " + newProbeType);
+                                        selectedUltrasound.setCurrentProbeType(newProbeType);
+                                        break;
+                                    }
+
                                 }
-                                count++;
+                                //[4] Back button
+                            } else if (ultrasoundSettingChoice == 4) {
+                                ultrasoundSettingsMenuRunning = false;
+
+                            } else {
+                                System.out.println("Invalid option!");
                             }
-                            System.out.println("Updated Ultrasound probe type from: " + selectedUltrasound.getCurrentProbeType() + "to -> " + newProbeType);
-                            selectedUltrasound.setCurrentProbeType(newProbeType);
-                            break;
 
                         }
-
-                    } else if (settingChoice == 4) {
-                        break;
-                    } else {
-                        System.out.println("Invalid option!");
                     }
-
                 }
+
                 //[3] Manage Radiologists
-            } else if (menuChoice == 3) {
-                while (true) {
+            } else if (mainMenuChoice == 3) {
+                boolean manageRadiologistsMenuRunning = true;
+                while (manageRadiologistsMenuRunning) {
                     System.out.println("~Radiologist Configuration~");
                     System.out.println("Select Radiologist to configure: ");
                     for (int i = 0; i < radiologists.size(); i++) {
@@ -466,7 +490,7 @@ public class Project {
                 }
 
                 //[4] Use Diagnostic Tool
-            } else if (menuChoice == 4) {
+            } else if (mainMenuChoice == 4) {
                 while (true) {
                     System.out.println("Enter Tool to use: ");
                     System.out.println("[1] MRI Machine");
@@ -579,14 +603,16 @@ public class Project {
                 }
 
                 //[5] User Manuals
-            } else if (menuChoice == 5) {
+            } else if (mainMenuChoice == 5) {
                 while (true) {
                     System.out.println("[1] View Manual");
                     System.out.println("[2] Edit Probe Types");
                     System.out.println("[3] Back");
-                    System.out.println("-------");
+                    System.out.println("-------------------------------------------------------");
+
                     int manualChoice = In.nextInt();
-                    System.out.println("-------");
+                    System.out.println("-------------------------------------------------------");
+
                     if (manualChoice == 1) {
                         System.out.println("~Ultrasound Manual~");
                         System.out.println("Probe Types are not initialised by default. Probes must be set in 'Configure Ultrasounds' to activate ultrasounds");
@@ -706,7 +732,7 @@ public class Project {
                 }
 
                 //[6] Exit Main Menu
-            } else if (menuChoice == 6) {
+            } else if (mainMenuChoice == 6) {
                 mainMenuRunning = false;
 
                 //[Invalid option]
@@ -740,7 +766,7 @@ class DiagnosticTool {
 
     }
 
-    public boolean getIsOperational() {
+    public boolean IsOperational() {
         return this.isOperational;
     }
 
@@ -809,14 +835,12 @@ class MRIMachine extends DiagnosticTool {
 
     }
 
-    
-
     //overrides of 2 methods
     //at least 1 shuold modify value of a class attribute
     //both should reference an attribute or method of parent class
     @Override
     public void activate(Radiologist radiologist) {
-        if (!this.getIsOperational()) {
+        if (!this.IsOperational()) {
             System.out.println("MRI Machine " + this.name + " is not operational. Activation failed. ");
             System.out.println("Please reactivate once MRI Machine " + this.name + " is operational");
             return;
@@ -832,9 +856,7 @@ class MRIMachine extends DiagnosticTool {
                 this.setIsOperational(false);
                 System.out.println("Please reactivate once Ultrasound " + this.name + " has all settings initialised");
                 return;
-                
 
-                
             }
 
         }
@@ -858,7 +880,7 @@ class MRIMachine extends DiagnosticTool {
     @Override
     public String toString() {
         String report = "MRI Machine: " + this.getName() + "\n";
-        report += "Is Operational: " + this.getIsOperational() + "\n";
+        report += "Is Operational: " + this.IsOperational() + "\n";
         report += "CoilType: " + this.systemSettings.get("CoilType") + "\n";
         report += "MagneticFieldStrength: " + this.systemSettings.get("MagneticFieldStrength") + "\n";
         return report;
@@ -890,7 +912,7 @@ class Ultrasound extends DiagnosticTool {
     //both should reference an attribute or method of parent class
     @Override
     public void activate(Radiologist radiologist) {
-        if (!this.getIsOperational()) {
+        if (!this.IsOperational()) {
             System.out.println("Ultrasound " + this.name + " is not operational. Activation failed.");
             return;
         }
@@ -927,7 +949,7 @@ class Ultrasound extends DiagnosticTool {
     @Override
     public String toString() {
         String report = "Ultrasound: " + this.getName() + "\n";
-        report += "Is Operational: " + this.getIsOperational() + "\n";
+        report += "Is Operational: " + this.IsOperational() + "\n";
         report += "Current Probe Type: " + this.currentProbeType;
         return report;
     }
