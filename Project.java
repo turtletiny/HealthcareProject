@@ -151,7 +151,7 @@ public class Project {
                                 //[2] Toggle Operational
                             } else if (mriSettingChoice == 2) {
                                 selectedMRI.isOperationalToggle();
-                                System.out.println("Updated MRI Operational state from: " + !selectedMRI.IsOperational() + " to -> " + selectedMRI.IsOperational());
+                                System.out.println("Updated MRI Operational state from: " + !selectedMRI.isOperational() + " to -> " + selectedMRI.isOperational());
 
                                 //[3] Set Coil Type
                             } else if (mriSettingChoice == 3) {
@@ -284,7 +284,7 @@ public class Project {
                                 //[2] Toggle Operational
                             } else if (ultrasoundSettingChoice == 2) {
                                 selectedUltrasound.isOperationalToggle();
-                                System.out.println("Updated Ultrasound state from: " + !selectedUltrasound.IsOperational() + " to -> " + selectedUltrasound.IsOperational());
+                                System.out.println("Updated Ultrasound state from: " + !selectedUltrasound.isOperational() + " to -> " + selectedUltrasound.isOperational());
 
                                 //[3] Set Probe Type
                             } else if (ultrasoundSettingChoice == 3) {
@@ -768,7 +768,7 @@ class DiagnosticTool {
 
     }
 
-    public boolean IsOperational() {
+    public boolean isOperational() {
         return this.isOperational;
     }
 
@@ -842,7 +842,7 @@ class MRIMachine extends DiagnosticTool {
     //both should reference an attribute or method of parent class
     @Override
     public void activate(Radiologist radiologist) {
-        if (!this.IsOperational()) {
+        if (!this.isOperational()) {
             System.out.println("MRI Machine " + this.name + " is not operational. Activation failed. ");
             System.out.println("Please reactivate once MRI Machine " + this.name + " is operational");
             return;
@@ -881,7 +881,7 @@ class MRIMachine extends DiagnosticTool {
     //toString 
     public String toString() {
         String report = "MRI Machine: " + this.getName() + "\n";
-        report += "Is Operational: " + this.IsOperational() + "\n";
+        report += "Is Operational: " + this.isOperational() + "\n";
         report += "CoilType: " + this.systemSettings.get("CoilType") + "\n";
         report += "MagneticFieldStrength: " + this.systemSettings.get("MagneticFieldStrength") + "\n";
         return report;
@@ -911,7 +911,7 @@ class Ultrasound extends DiagnosticTool {
     //overrides of 2 methods
     @Override
     public void activate(Radiologist radiologist) {
-        if (!this.IsOperational()) {
+        if (!this.isOperational()) {
             System.out.println("Ultrasound " + this.name + " is not operational. Activation failed.");
             return;
         }
@@ -947,7 +947,7 @@ class Ultrasound extends DiagnosticTool {
     //toString 
     public String toString() {
         String report = "Ultrasound: " + this.getName() + "\n";
-        report += "Is Operational: " + this.IsOperational() + "\n";
+        report += "Is Operational: " + this.isOperational() + "\n";
         report += "Current Probe Type: " + this.currentProbeType;
         return report;
     }
