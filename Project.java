@@ -308,16 +308,16 @@ public class Project {
                                         System.out.println("Invalid option!");
                                         continue;
 
-                                    //Back Button
-                                    } else if (probeTypeChoice == probeDatabase.size() + 1) { 
+                                        //Back Button
+                                    } else if (probeTypeChoice == probeDatabase.size() + 1) {
                                         break;
 
                                     } else {
                                         //loop through probe Database, incrementing n every loop until n == user selection
                                         String newProbeType = "";
                                         int n = 1;
-                                        for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) { 
-                                            if (n == probeTypeChoice) { 
+                                        for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) {
+                                            if (n == probeTypeChoice) {
                                                 newProbeType += entry.getKey(); //get the name of the probe
                                                 break; //stop looping though probe database
                                             }
@@ -625,7 +625,7 @@ public class Project {
                         }
                         System.out.println("~MRI Machine Manual~");
                         System.out.println("All Metallic objects must be removed");
-                        System.out.println("");
+                        System.out.println("MRI Settings are not initialised by default. Settings must be set in 'Configure MRI Machines' to activate MRI Machines");
                         System.out.println("~General~");
                         System.out.println("Only enter text when prompted for text, Otherwise program will crash");
                         System.out.println("-------------------------------------------------------");
@@ -686,20 +686,22 @@ public class Project {
                                 }
 
                             } else {
-                                int count = 1;
+                                int n = 1; //counter
                                 String selectedProbe = "";
                                 ArrayList<String> selectedProbeUseCases = new ArrayList<>();
 
                                 for (Map.Entry<String, ArrayList<String>> entry : probeDatabase.entrySet()) {
                                     String key = entry.getKey();
 
-                                    if (count == editProbeChoice) {
+
+                                    //increments n by 1 every iteration to get the key and value of the probe the user selected
+                                    if (n == editProbeChoice) { 
                                         selectedProbe = key;
                                         selectedProbeUseCases = entry.getValue();
-                                        System.out.println("Current use cases for: " + selectedProbe);
+                                        System.out.println("Current use cases for: " + selectedProbe); //also prints the current uses cases in the same loop so I dont have to create a 2nd for each loop
                                         System.out.println(selectedProbeUseCases);
                                     }
-                                    count++;
+                                    n++;
 
                                 }
                                 while (true) {
@@ -907,8 +909,6 @@ class Ultrasound extends DiagnosticTool {
     }
 
     //overrides of 2 methods
-    //at least 1 shuold modify value of a class attribute
-    //both should reference an attribute or method of parent class
     @Override
     public void activate(Radiologist radiologist) {
         if (!this.IsOperational()) {
