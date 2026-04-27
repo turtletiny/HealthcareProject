@@ -44,7 +44,7 @@ class MRIMachine(DiagnosticTool):
             return
         
         for key, value in self.systemSettings.items():
-            if value is None:
+            if value == None:
                 print(f"Value not selected for parameter: {key}. System safety protocol activated:")
                 print("Is Operational set to: false")
                 self.isOperational = False
