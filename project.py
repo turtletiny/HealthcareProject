@@ -49,6 +49,17 @@ class MRIMachine(DiagnosticTool):
         message = super().get_safety_warning()
         message += "\n- ALL METALLIC OBJECTS MUST BE REMOVED BEFORE ENTRY."
         return message
+    
+
+    @staticmethod
+    def is_duplicate_name(name, database):
+        for i in database:
+            if i.name == name:
+                return True
+        return False
+
+
+
 
     def __str__(self):
         report = f"MRI Machine: {self.name} \n"
@@ -147,12 +158,76 @@ while main_menu_running:
 """)
     print(25*"-")
     print("-Home-")
-    print("[1]")
-    print("[2]")
-    print("[3]")
-    print("[4]")
-    print("[5]")
-    print("[6]")
+    print("[1] Configure MRI Machines")
+    print("[2] Configure Ultrasounds")
+    print("[3] Manage Radiologists")
+    print("[4] Use Diagnostic Tool")
+    print("[5] View/Edit User Manual")
+    print("[6] Exit")
     print(25*"-")
-    main_menu_choice = input("Select option: ")
+    main_menu_choice = int(input("Select option: "))
     print(25*"-")
+
+    #[1] Configure MRI Machines
+    if main_menu_choice == 1:
+        mri_menu_running = True
+        while mri_menu_running:
+            print("~MRI Machine Configuration~")
+            for i in range(len(mri_database)):
+                print(f"[{i+1}] {mri_database[i].name}")
+            print(f"[{i+2}] Add new MRI Machine")
+            print(f"[{i+3}] Back")
+            print(25*"-")
+            mri_menu_choice = int(input("Select option: "))
+
+            #Out of range
+            if mri_menu_choice < 1 or mri_menu_choice > i+3:
+                print("Invalid option! ")
+                continue
+
+            #Back Button
+            elif mri_menu_choice == (i+3):
+                mri_menu_running = False
+            
+            #Add New MRI Machine
+            elif mri_menu_choice == (i+2):
+                add_mri_running = True
+                while add_mri_running:
+                    print(25*"-")
+                    new_mri_name = input("Enter new MRI Machine name: ")
+                    print(25*"-")
+                    if MRIMachine.is_duplicate_name(new_mri_name, mri_database):
+                        print("Name already exists! ")
+                    else:
+                        mri_database.append(MRIMachine(new_mri_name, True))
+                        print(f"New MRI Machine: {new_mri_name} added.")
+                        print(25*"-")
+                        add_mri_running = False
+
+            #Choose Settings for selected MRI
+            else:
+                mri_settings_menu_running = True
+                while mri_settings_menu_running:
+                    selected_mri = mri_database[mri_menu_choice-1]
+                    print(selected_mri)
+                    print("[1] Set Name")
+                    print("[2] Toggle Operational")
+                    print("[3] Set Coil Type")
+                    print("[4] Set Magnetic Field Strength")
+                    print("[5] Back")
+                    print(25*"-")
+                    mri_settings_choice = int(input("Select option: "))
+                    print(25*"-")
+
+                    if mri_settings_choice == 1:
+                        while True:
+                            print("Enter new MRI Machine name: ")
+                            print(25*"-")
+                            new_mri_name = input("")
+                            MRIMachine.is_duplicate_name(new_mri_name, mri_database)
+
+
+                    #
+
+
+    
