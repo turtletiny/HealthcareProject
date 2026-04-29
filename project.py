@@ -1,3 +1,14 @@
+#Non Class Functions:
+def print_menu_items(database):
+    for i in range(len(database)):
+        print(f"[{i+1}] {database[i].name}")
+
+
+
+
+
+
+#Classes
 class DiagnosticTool:
     def __init__(self, name, is_operational):
         self.name = name
@@ -173,24 +184,23 @@ while main_menu_running:
         mri_menu_running = True
         while mri_menu_running:
             print("~MRI Machine Configuration~")
-            for i in range(len(mri_database)):
-                print(f"[{i+1}] {mri_database[i].name}")
-            print(f"[{i+2}] Add new MRI Machine")
-            print(f"[{i+3}] Back")
+            print_menu_items(mri_database)
+            print(f"[{len(mri_database)+1}] Add new MRI Machine")
+            print(f"[{len(mri_database)+2}] Back")
             print(25*"-")
             mri_menu_choice = int(input("Select option: "))
 
             #Out of range
-            if mri_menu_choice < 1 or mri_menu_choice > i+3:
+            if mri_menu_choice < 1 or mri_menu_choice > len(mri_database)+2:
                 print("Invalid option! ")
                 continue
 
             #Back Button
-            elif mri_menu_choice == (i+3):
+            elif mri_menu_choice == (len(mri_database)+2):
                 mri_menu_running = False
             
             #Add New MRI Machine
-            elif mri_menu_choice == (i+2):
+            elif mri_menu_choice == (len(mri_database))+1:
                 add_mri_running = True
                 while add_mri_running:
                     print(25*"-")
@@ -219,12 +229,27 @@ while main_menu_running:
                     mri_settings_choice = int(input("Select option: "))
                     print(25*"-")
 
+                    #[1] Set Name
                     if mri_settings_choice == 1:
                         while True:
                             print("Enter new MRI Machine name: ")
                             print(25*"-")
                             new_mri_name = input("")
-                            MRIMachine.is_duplicate_name(new_mri_name, mri_database)
+                            if MRIMachine.is_duplicate_name(new_mri_name, mri_database):
+                                print("Name already exists!")
+                            else:
+                                print(f"Updated MRI name from: {selected_mri.name} to -> {new_mri_name}")
+                                selected_mri.name = new_mri_name
+                                break
+                    #[2] Toggle Operational
+                    elif mri_settings_choice == 2:
+                        selected_mri = not selected_mri
+                        print(f"Updated MRI Operational state from: {not selected_mri} to -> {selected_mri}")
+                    #[3] Set Coil Type
+                    elif mri_settings_choice == 3:
+                        print_menu_items()
+
+
 
 
                     #
