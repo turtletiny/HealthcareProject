@@ -6,4 +6,4 @@ Contraints:
 
 
 #**Python Port with improved functionality**
-Current WIP for a python port of the project with further polish and features
+- Current WIP for a python port of the project with further polish and features
